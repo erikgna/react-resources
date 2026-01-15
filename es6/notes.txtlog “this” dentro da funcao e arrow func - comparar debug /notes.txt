@@ -10,3 +10,5 @@ object.assign vs spread
 
 quando acontece o get e o set de um objeto
 verificar o que triga o proxy
+
+Como o JS faz um objecto read only
