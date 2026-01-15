@@ -1,0 +1,12 @@
+log “this” dentro da funcao e arrow func - comparar
+debug / error handler in func and arrow func
+
+objeto puro e map
+Por que usar entries 
+Object.keys
+Object.values
+
+object.assign vs spread
+
+quando acontece o get e o set de um objeto
+verificar o que triga o proxy
