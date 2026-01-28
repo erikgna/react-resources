@@ -1,93 +1,173 @@
+console.log("=== Shadowing Object.prototype methods ===");
+
 const obj = {
-    foo: 1,
-    // You should not define such a method on your own object,
-    // but you may not be able to prevent it from happening if
-    // you are receiving the object from external input
-    propertyIsEnumerable() {
-        return false;
-    },
+  foo: 1,
+  // This shadows Object.prototype.propertyIsEnumerable
+  propertyIsEnumerable() {
+    return false;
+  },
 };
 
-obj.propertyIsEnumerable("foo"); // false; unexpected result
-Object.prototype.propertyIsEnumerable.call(obj, "foo")
+console.log(obj.propertyIsEnumerable("foo")); 
+// false → unexpected, because you overrode the method
+
+// Safe way: always call the original method explicitly
+console.log(
+  Object.prototype.propertyIsEnumerable.call(obj, "foo")
+); // true
+
+// When dealing with objects from external input, never trust instance methods.
+
+console.log("\n=== Prototypes ===");
 
 const normalObj = {};
 const nullProtoObj = Object.create(null);
 const obj2 = { __proto__: null };
-console.log(nullProtoObj);
-console.log(obj2);
 
-normalObj.valueOf(); // shows {}
-nullProtoObj.valueOf(); // throws error: nullProtoObj.valueOf is not a function
+console.log("normalObj:", normalObj);
+console.log("nullProtoObj:", nullProtoObj);
+console.log("obj2:", obj2);
 
-normalObj.hasOwnProperty("p"); // shows "true"
-nullProtoObj.hasOwnProperty("p"); // throws error: nullProtoObj.hasOwnProperty is not a function
+console.log("\n--- valueOf ---");
+console.log(normalObj.valueOf()); // {}
 
-Object.assign()
-// Copies the values of all enumerable own properties from one or more source objects to a target object.
+try {
+  nullProtoObj.valueOf();
+} catch (e) {
+  console.log("nullProtoObj.valueOf ERROR:", e.message);
+}
 
-Object.create()
-// Creates a new object with the specified prototype object and properties.
+console.log("\n--- hasOwnProperty ---");
+console.log(
+  Object.prototype.hasOwnProperty.call(normalObj, "p")
+); // false
 
-Object.defineProperties()
-// Adds the named properties described by the given descriptors to an object.
+console.log(
+  Object.prototype.hasOwnProperty.call(nullProtoObj, "p")
+); // false
 
-Object.defineProperty()
-// Adds the named property described by a given descriptor to an object.
+// ❌ This throws, because method doesn't exist
+try {
+  nullProtoObj.hasOwnProperty("p");
+} catch (e) {
+  console.log("nullProtoObj.hasOwnProperty ERROR:", e.message);
+}
 
-Object.entries()
-// Returns an array containing all of the [key, value] pairs of a given object's own enumerable string properties.
+// Why null-prototype objects matter
 
-Object.freeze()
-// Freezes an object. Other code cannot delete or change its properties.
+// immune to prototype pollution
+// common in security-sensitive code
 
-Object.fromEntries()
-// Returns a new object from an iterable of [key, value] pairs. (This is the reverse of Object.entries).
+console.log("\n=== Enumerability ===");
 
-Object.getOwnPropertyDescriptor()
-// Returns a property descriptor for a named property on an object.
+const enumObj = {};
 
-Object.getOwnPropertyDescriptors()
-// Returns an object containing all own property descriptors for an object.
+Object.defineProperty(enumObj, "visible", {
+  value: 123,
+  enumerable: true,
+});
 
-Object.getOwnPropertyNames()
-// Returns an array containing the names of all of the given object's own enumerable and non-enumerable properties.
+Object.defineProperty(enumObj, "hidden", {
+  value: 456,
+  enumerable: false,
+});
 
-Object.getOwnPropertySymbols()
-// Returns an array of all symbol properties found directly upon a given object.
+console.log("Object.keys:", Object.keys(enumObj)); // ["visible"]
+console.log("Object.values:", Object.values(enumObj)); // [123]
+console.log("Object.entries:", Object.entries(enumObj)); // [["visible", 123]]
 
-Object.getPrototypeOf()
-// Returns the prototype (internal [[Prototype]] property) of the specified object.
+console.log("hidden in obj:", "hidden" in enumObj); // true
 
-Object.groupBy()
-// Groups the elements of a given iterable according to the string values returned by a provided callback function. The returned object has separate properties for each group, containing arrays with the elements in the group.
+console.log("\n=== Property Descriptors ===");
 
-Object.hasOwn()
-// Returns true if the specified object has the indicated property as its own property, or false if the property is inherited or does not exist.
+const user = {};
 
-Object.is()
-// Compares if two values are the same value. Equates all NaN values (which differs from both IsLooselyEqual used by == and IsStrictlyEqual used by ===).
+Object.defineProperty(user, "id", {
+  value: 1,
+  writable: false,
+  enumerable: true,
+  configurable: false,
+});
 
-Object.isExtensible()
-// Determines if extending of an object is allowed.
+console.log(user.id); // 1
 
-Object.isFrozen()
-// Determines if an object was frozen.
+user.id = 2; // silently ignored (or throws in strict mode)
+console.log(user.id); // still 1
 
-Object.isSealed()
-// Determines if an object is sealed.
+console.log(
+  Object.getOwnPropertyDescriptor(user, "id")
+);
 
-Object.keys()
-// Returns an array containing the names of all of the given object's own enumerable string properties.
+console.log("\n=== Object immutability ===");
 
-Object.preventExtensions()
-// Prevents any extensions of an object.
+const a = { x: 1 };
+Object.freeze(a);
 
-Object.seal()
-// Prevents other code from deleting properties of an object.
+a.x = 2;      // ignored
+delete a.x;   // ignored
+a.y = 3;      // ignored
 
-Object.setPrototypeOf()
-// Sets the object's prototype (its internal [[Prototype]] property).
+console.log(a); // { x: 1 }
+console.log(Object.isFrozen(a)); // true
 
-Object.values()
-// Returns an array containing the values that correspond to all of a given object's own enumerable string properties.
+const b = { x: 1 };
+Object.seal(b);
+
+b.x = 2;      // allowed
+delete b.x;   // ignored
+b.y = 3;      // ignored
+
+console.log(b); // { x: 2 }
+
+const c = { x: 1 };
+Object.preventExtensions(c);
+
+c.y = 2; // ignored
+console.log(c); // { x: 1 }
+
+console.log("\n=== Object.assign ===");
+
+const target = { a: 1 };
+const source = { b: 2, c: 3 };
+
+const result = Object.assign(target, source);
+
+console.log(result); // { a: 1, b: 2, c: 3 }
+console.log(target === result); // true (mutates target)
+
+// Nested objects are still shared
+
+console.log("\n=== fromEntries ===");
+
+const entries = [
+  ["a", 1],
+  ["b", 2],
+];
+
+const objFromEntries = Object.fromEntries(entries);
+console.log(objFromEntries); // { a: 1, b: 2 }
+
+console.log("\n=== groupBy ===");
+
+const people = [
+  { name: "Ana", age: 20 },
+  { name: "Bob", age: 30 },
+  { name: "Carol", age: 20 },
+];
+
+const grouped = Object.groupBy(people, p => p.age);
+console.log(grouped);
+/*
+{
+  "20": [{...}, {...}],
+  "30": [{...}]
+}
+*/
+
+console.log("\n=== Safe property checks ===");
+
+const data = Object.create(null);
+data.x = 1;
+
+console.log(Object.hasOwn(data, "x")); // true
+console.log(Object.hasOwn(data, "toString")); // false

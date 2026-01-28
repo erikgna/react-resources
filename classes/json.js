@@ -1,30 +1,96 @@
-JSON.isRawJSON()
-// Tests whether a value is an object returned by JSON.rawJSON().
+console.log("=== JSON basics ===");
 
-JSON.parse()
-// Parse a piece of string text as JSON, optionally transforming the produced value and its properties, and return the value.
+const jsonText = '{"a":1,"b":2}';
 
-JSON.rawJSON()
-// Creates a "raw JSON" object containing a piece of JSON text. When serialized to JSON, the raw JSON object is treated as if it is already a piece of JSON. This text is required to be valid JSON.
+const parsed = JSON.parse(jsonText);
+console.log(parsed); // { a: 1, b: 2 }
 
-JSON.stringify()
+const stringified = JSON.stringify(parsed);
+console.log(stringified); // {"a":1,"b":2}
+
+
+console.log("\n=== JSON.parse with reviver ===");
+
+const input = '{"createdAt":"2025-01-01T10:00:00.000Z","count":"123"}';
+
+const revived = JSON.parse(input, (key, value) => {
+  if (key === "createdAt") {
+    return new Date(value);
+  }
+  if (key === "count") {
+    return BigInt(value);
+  }
+  return value;
+});
+
+console.log(revived);
+console.log(revived.createdAt instanceof Date); // true
+console.log(typeof revived.count); // bigint
+
+console.log("\n=== JSON.stringify with replacer ===");
 
 const data = {
-    // Using a BigInt here to store the exact value,
-    // but it can also be a custom high-precision number library,
-    // if the number might not be an integer.
-    gross_gdp: 12345678901234567890n,
+  gross_gdp: 12345678901234567890n,
+  country: "BR",
 };
 
-BigInt.prototype.toJSON = function () {
-    return this.toString();
-};
-const str1 = JSON.stringify(data);
+// This would normally throw: JSON.stringify(data);
 
-// Using JSON.stringify() with replacer
-const str2 = JSON.stringify(data, (key, value) => {
-    if (key === "gross_gdp") {
-        return value.toString();
-    }
-    return value;
+const str = JSON.stringify(data, (key, value) => {
+  if (typeof value === "bigint") {
+    return value.toString(); // must convert manually
+  }
+  return value;
 });
+
+console.log(str);
+// {"gross_gdp":"12345678901234567890","country":"BR"}
+// JSON.stringify cannot serialize BigInt unless you transform it
+
+console.log("\n=== JSON.stringify with key whitelist ===");
+
+const user = {
+  id: 1,
+  email: "test@email.com",
+  password: "secret",
+};
+
+const safe = JSON.stringify(user, ["id", "email"]);
+console.log(safe);
+// {"id":1,"email":"test@email.com"}
+
+console.log("\n=== JSON.rawJSON ===");
+
+const raw = JSON.rawJSON('{"x":10,"y":20}');
+
+const wrapped = {
+  type: "point",
+  value: raw,
+};
+
+console.log(JSON.stringify(wrapped));
+// {"type":"point","value":{"x":10,"y":20}}
+
+
+console.log("\n=== Values JSON drops ===");
+
+const weird = {
+  a: undefined,
+  b: function () {},
+  c: Symbol("x"),
+  d: 1,
+};
+
+console.log(JSON.stringify(weird));
+// {"d":1}
+
+console.log("\n=== Circular reference ===");
+
+const a = {};
+a.self = a;
+
+try {
+  JSON.stringify(a);
+} catch (e) {
+  console.log("ERROR:", e.message);
+}
