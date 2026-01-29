@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1200px;
+
+  --color-neon-cyan: oklch(0.85 0.2 190);
+  --color-brand-primary: oklch(0.65 0.24 16.93);
+  --color-neon-lime: oklch(0.88 0.21 139);
+  --color-deep-space: oklch(0.15 0.02 250);
+  --shadow-glow: 0 0 20px 2px var(--color-neon-lime);
+
+  --font-display: "Clash Display", sans-serif;
+  
+  /* Changing a default value (e.g., making 'xl' radius much bigger) */
+  --radius-xl: 2rem;
+  
+  /* Adding a specific big padding */
+  --spacing-huge: 8rem;
+  --spacing-6: 1.5rem;
+
+  --animate-float: float 3s ease-in-out infinite;
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+.custom-card {
+  background-color: theme(--color-deep-space);
+  border: 1px solid theme(--color-gray-800);
+  padding: theme(--spacing-6);
+}
+
+/* Static Utility */
+@utility text-glow {
+  text-shadow: 0 0 15px var(--color-neon-cyan);
+}
+
+/* Utility with complex logic */
+@utility mask-fade-bottom {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+/* Functional Utility (Accepts any value) */
+@utility scrollbar-w-* {
+  scrollbar-width: auto;
+  &::-webkit-scrollbar {
+    width: --value;
+  }
+}
+
+/* Creating a "Button" utility that supports variants automatically */
+@utility btn-neon {
+  background-color: theme(--color-neon-lime);
+  color: theme(--color-black);
+  padding: theme(--spacing-2) theme(--spacing-4);
+  border-radius: theme(--radius-md);
+  font-weight: theme(--font-weight-bold);
+  transition: all 0.2s;
+
+  &:hover {
+    box-shadow: theme(--shadow-glow);
+    transform: scale(1.05);
+  }
+}
+
+/* Creating a custom "hocus" variant (hover + focus) */
+@variant hocus (&:hover, &:focus);
+
+/* Highlighting an item if it has a specific data attribute */
+@variant selected (&[data-selected="true"]);
