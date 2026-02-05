@@ -50,29 +50,14 @@ export default function DetectionPlayground() {
                 </div>
             </section>
 
-            {/* 3. Concatenation Failure */}
+            {/* 3. Concatenation Worked? */}
             <section className="space-y-4">
-                <h2 className="font-semibold text-lg text-red-600">3. Concatenation (The Wrong Way)</h2>
+                <h2 className="font-semibold text-lg text-red-600">3. Concatenation (The Wrong Way, but it worked)</h2>
                 <div className={`p-4 border-2 border-dashed ${brokenDynamicClass}`}>
                     <p>Current class: <code className="font-bold">{brokenDynamicClass}</code></p>
                     <p className="text-sm mt-2">
-                        <strong>Result:</strong> This box will have NO background color.
-                        Tailwind's scanner does not run JavaScript, so it never sees the word "bg-red-500".
+                        <strong>Result:</strong> This boxs should not have a background color. But it does.
                     </p>
-                </div>
-            </section>
-
-            {/* 4. Non-Standard Files */}
-            <section className="space-y-4">
-                <h2 className="font-semibold text-lg text-blue-600">4. Detection via @source</h2>
-                <div className="p-4 bg-gray-100 rounded-lg">
-                    <p className="text-sm">
-                        If this component were in a file called <code className="text-pink-600">Library.txt</code>
-                        Tailwind wouldn't scan it by default. You would need:
-                    </p>
-                    <pre className="mt-2 p-2 bg-gray-800 text-green-400 rounded text-xs">
-                        {`@source "./path/to/Library.txt";`}
-                    </pre>
                 </div>
             </section>
         </div>

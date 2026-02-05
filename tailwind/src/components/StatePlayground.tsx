@@ -1,12 +1,3 @@
-import React from "react";
-
-/**
- * Tailwind State Playground
- * POC component to visually test hover, focus, active, disabled,
- * group-hover, peer, and dark mode states.
- *
- * Assumes Tailwind is already installed and configured.
- */
 export default function StatePlayground() {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8 text-gray-900 dark:text-gray-100">
@@ -17,7 +8,7 @@ export default function StatePlayground() {
                 <h2 className="font-semibold mb-2">Hover / Active</h2>
                 <button className="px-4 py-2 rounded-xl bg-blue-600 text-white shadow transition
                            hover:bg-blue-700 active:scale-95">
-                    Hover / Active me
+                    Hover / Active me   
                 </button>
             </section>
 
@@ -107,25 +98,6 @@ export default function StatePlayground() {
                 <div className="p-4 rounded-xl bg-red-200 sm:bg-yellow-200 md:bg-green-200 lg:bg-blue-200">
                     Resize viewport (sm / md / lg)
                 </div>
-            </section>
-
-            {/* Feature queries */}
-            <section className="mb-8">
-                <h2 className="font-semibold mb-2">Feature queries</h2>
-                <div className="p-4 rounded-xl bg-gray-200 supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:backdrop-blur">
-                    Uses @supports(backdrop-filter)
-                </div>
-            </section>
-
-            {/* Child selectors */}
-            <section className="mb-8">
-                <h2 className="font-semibold mb-2">Child selectors</h2>
-                <ul className="p-4 rounded-xl border space-y-2 [&>li]:px-2 [&>li]:py-1 [&>li]:rounded
-                       [&>li:nth-child(odd)]:bg-gray-200 [&>li:nth-child(even)]:bg-gray-300">
-                    <li>Item 1</li>
-                    <li>Item 2</li>
-                    <li>Item 3</li>
-                </ul>
             </section>
 
             {/* Custom variants */}

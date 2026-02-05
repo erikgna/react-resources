@@ -1,14 +1,5 @@
 import { useEffect, useState } from "react";
 
-/**
- * Dark Mode Playground
- * Tests:
- * - dark mode enabled / disabled
- * - class-based dark mode
- * - dark variants, media dark, and opt-out
- *
- * Assumes tailwind.config uses: darkMode: 'class'
- */
 export default function DarkModePlayground() {
   const [dark, setDark] = useState(false);
 
@@ -50,24 +41,10 @@ export default function DarkModePlayground() {
         </button>
       </section>
 
-      {/* Disabled dark */}
-      <section className="space-y-2">
-        <h2 className="font-semibold">Disabled + dark</h2>
-        <button
-          disabled
-          className="px-4 py-2 rounded-xl
-                     bg-gray-300 text-gray-600
-                     dark:bg-gray-700 dark:text-gray-400
-                     opacity-70 cursor-not-allowed"
-        >
-          Disabled
-        </button>
-      </section>
-
       {/* Dark opt-out */}
       <section className="space-y-2">
         <h2 className="font-semibold">Opt-out of dark</h2>
-        <div className="p-4 rounded-xl bg-white text-black dark:[background:white] dark:[color:black]">
+        <div className="p-4 rounded-xl bg-white text-black dark:[background:white] dark:text-[black]">
           This block ignores dark mode
         </div>
       </section>

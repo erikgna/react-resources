@@ -1,15 +1,3 @@
-import React from "react";
-
-/**
- * Responsive & Container Query Playground
- * Tests:
- * - Mobile-first philosophy
- * - Custom breakpoints
- * - Container queries
- *
- * Requires Tailwind v3.3+ with container queries enabled
- * and custom breakpoints defined in tailwind.config.
- */
 export default function ResponsivePlayground() {
   return (
     <div className="min-h-screen p-6 space-y-10 bg-gray-50 text-gray-900">
