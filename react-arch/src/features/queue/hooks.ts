@@ -1,10 +1,11 @@
 import useSWR from 'swr'
 import { queueApi } from './api'
-import { QueueState, QueueEstimate } from './types'
-import { ID } from '../../shared/types/common'
+import type { QueueState, QueueEstimate } from './types'
+import type { ID } from '../../shared/types/common'
 
 const QUEUE_KEY = 'queue'
 
+// Fetches and caches queue state
 export function useQueue() {
   const { data, error, isLoading } = useSWR<QueueState>(
     QUEUE_KEY,
@@ -26,6 +27,7 @@ export function useQueue() {
   }
 }
 
+// Fetches and caches a single queue estimate
 export function useQueueEstimate(orderId: ID): QueueEstimate | undefined {
   const { queueState } = useQueue()
   return queueState.estimates.find((e) => e.orderId === orderId)

@@ -1,4 +1,4 @@
-import { Order } from '../types'
+import type { Order } from '../types'
 import { OrderCard } from './order-card'
 
 interface OrderListProps {

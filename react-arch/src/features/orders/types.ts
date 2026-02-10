@@ -1,4 +1,4 @@
-import { ID, Timestamp } from '../../shared/types/common'
+import type { ID, Timestamp } from '../../shared/types/common'
 
 export type OrderStatus = 'queued' | 'preparing' | 'done'
 

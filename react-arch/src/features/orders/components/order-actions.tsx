@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '../../../shared/ui/button'
 import { useUpdateOrderStatus, useDeleteOrder } from '../hooks'
-import { Order } from '../types'
+import type { Order } from '../types'
 
 interface OrderActionsProps {
   order: Order

@@ -1,4 +1,4 @@
-import { QueueState } from '../types'
+import type { QueueState } from '../types'
 import { QueueCard } from './queue-card'
 
 interface QueueTimelineProps {

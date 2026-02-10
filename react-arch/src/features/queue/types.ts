@@ -1,5 +1,5 @@
-import { ID, Timestamp } from '../../shared/types/common'
-import { Order } from '../orders/types'
+import type { ID, Timestamp } from '../../shared/types/common'
+import type { Order } from '../orders/types'
 
 export interface QueueEstimate {
   orderId: ID

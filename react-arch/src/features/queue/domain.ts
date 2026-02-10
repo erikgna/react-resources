@@ -1,16 +1,18 @@
-import { Order, Dish } from '../orders/types'
-import { QueueEstimate } from './types'
-import { Timestamp } from '../../shared/types/common'
+import type { Order, Dish } from '../orders/types'
+import type { QueueEstimate } from './types'
+import type { Timestamp } from '../../shared/types/common'
 
+// Calculates queue position and timing estimates for all active orders
 export function calculateQueueEstimates(
   orders: Order[],
   dishes: Dish[],
   currentTime: Timestamp
 ): QueueEstimate[] {
   const dishMap = new Map(dishes.map((d) => [d.id, d]))
+
   const activeOrders = orders.filter((o) => o.status !== 'done')
 
-  let cumulativeTime = 0
+  let nextAvailableTime = currentTime
   const estimates: QueueEstimate[] = []
 
   for (let i = 0; i < activeOrders.length; i++) {
@@ -20,8 +22,21 @@ export function calculateQueueEstimates(
     if (!dish) continue
 
     const prepTime = calculatePrepTime(dish, order.quantity)
-    const startTime = currentTime + cumulativeTime
-    const completionTime = startTime + prepTime
+
+    let startTime: Timestamp
+    let completionTime: Timestamp
+
+    if (order.status === 'preparing') {
+      startTime = order.updatedAt
+      const elapsedTime = Math.max(0, currentTime - startTime)
+      const remainingTime = Math.max(0, prepTime - elapsedTime)
+      completionTime = currentTime + remainingTime
+      nextAvailableTime = completionTime
+    } else {
+      startTime = nextAvailableTime
+      completionTime = startTime + prepTime
+      nextAvailableTime = completionTime
+    }
 
     estimates.push({
       orderId: order.id,
@@ -30,18 +45,18 @@ export function calculateQueueEstimates(
       position: i + 1,
       totalWaitTime: completionTime - currentTime
     })
-
-    cumulativeTime += prepTime
   }
 
   return estimates
 }
 
+// Calculates preparation time based on dish complexity and quantity
 export function calculatePrepTime(dish: Dish, quantity: number): number {
-  const multiplier = dish.complexityMultiplier ?? 1
-  return dish.baseTimeMs * quantity * multiplier
+  const multiplier = dish.complexityMultiplier ?? 1;
+  return dish.baseTimeMs * quantity * multiplier;
 }
 
+// Estimates how long a new order would take if added to the current queue
 export function estimateWaitTime(
   currentQueue: Order[],
   dishes: Dish[],
@@ -61,6 +76,7 @@ export function estimateWaitTime(
   return startTime + prepTime - currentTime
 }
 
+// Returns total time until the queue is fully processed
 export function calculateTotalQueueTime(estimates: QueueEstimate[]): number {
   if (estimates.length === 0) return 0
 

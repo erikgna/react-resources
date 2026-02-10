@@ -1,6 +1,6 @@
 import { Card } from '../../../shared/ui/card'
 import { formatDuration } from '../../../shared/lib/format'
-import { QueueState } from '../types'
+import type { QueueState } from '../types'
 
 interface QueueStatsProps {
   queueState: QueueState

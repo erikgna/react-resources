@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { type FormEvent, useState } from 'react'
 import { Card } from '../../../shared/ui/card'
 import { Select } from '../../../shared/ui/select'
 import { Input } from '../../../shared/ui/input'

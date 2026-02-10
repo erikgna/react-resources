@@ -2,8 +2,8 @@ import { Card } from '../../../shared/ui/card'
 import { formatDuration, formatTime } from '../../../shared/lib/format'
 import { Button } from '../../../shared/ui/button'
 import { useUpdateOrderStatus } from '../../orders/hooks'
-import { QueueEstimate } from '../types'
-import { Order } from '../../orders/types'
+import type { QueueEstimate } from '../types'
+import type { Order } from '../../orders/types'
 import { useState } from 'react'
 
 interface QueueCardProps {
@@ -42,7 +42,7 @@ export function QueueCard({ order, estimate }: QueueCardProps) {
     preparing: 'bg-blue-100 text-blue-800',
     done: 'bg-green-100 text-green-800'
   }
-
+console.log(estimate);
   return (
     <Card>
       <div className="flex items-start justify-between gap-4">

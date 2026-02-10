@@ -1,6 +1,6 @@
 import { storage } from './local-storage'
-import { Order } from '../../features/orders/types'
-import { ID } from '../../shared/types/common'
+import type { Order } from '../../features/orders/types'
+import type { ID } from '../../shared/types/common'
 
 const ORDERS_KEY = 'restaurant:orders'
 

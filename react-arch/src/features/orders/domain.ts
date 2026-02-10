@@ -1,15 +1,14 @@
-import { Order, OrderStatus, CreateOrderInput, Dish } from './types'
-import { ID, Timestamp } from '../../shared/types/common'
+import type { Order, OrderStatus, CreateOrderInput, Dish } from './types'
+import type { ID, Timestamp } from '../../shared/types/common'
 
+// Creates a new Order using validated domain data
 export function createOrder(
   input: CreateOrderInput,
   dishes: Dish[],
   currentTime: Timestamp
 ): Order {
   const dish = dishes.find(d => d.id === input.dishId)
-  if (!dish) {
-    throw new Error(`Dish with id ${input.dishId} not found`)
-  }
+  if (!dish) throw new Error(`Dish with id ${input.dishId} not found`)
 
   return {
     id: generateOrderId(),
@@ -22,6 +21,7 @@ export function createOrder(
   }
 }
 
+// Transition an order to a new status
 export function updateOrderStatus(
   order: Order,
   status: OrderStatus,
@@ -30,11 +30,15 @@ export function updateOrderStatus(
   return {
     ...order,
     status,
-    updatedAt: currentTime
+    updatedAt: currentTime // Always update timestamp on state change
   }
 }
 
-export function canTransitionTo(currentStatus: OrderStatus, newStatus: OrderStatus): boolean {
+// Guards valid order lifecycle transitions
+export function canTransitionTo(
+  currentStatus: OrderStatus,
+  newStatus: OrderStatus
+): boolean {
   const transitions: Record<OrderStatus, OrderStatus[]> = {
     queued: ['preparing', 'done'],
     preparing: ['done'],
@@ -44,10 +48,12 @@ export function canTransitionTo(currentStatus: OrderStatus, newStatus: OrderStat
   return transitions[currentStatus].includes(newStatus)
 }
 
+// Generates a reasonably unique order ID without external dependencies
 function generateOrderId(): ID {
-  return `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  return `order_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
 }
 
+// Static menu configuration
 export const DISHES: Dish[] = [
   {
     id: 'pasta',

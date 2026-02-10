@@ -1,6 +1,6 @@
 import { Card } from '../../../shared/ui/card'
 import { formatDateTime } from '../../../shared/lib/format'
-import { Order } from '../types'
+import type { Order } from '../types'
 import { OrderActions } from './order-actions'
 
 interface OrderCardProps {

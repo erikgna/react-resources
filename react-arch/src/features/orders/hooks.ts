@@ -1,11 +1,12 @@
 import useSWR, { mutate } from 'swr'
 import { ordersApi } from './api'
-import { Order, CreateOrderInput } from './types'
+import type { Order, CreateOrderInput } from './types'
 import { DISHES } from './domain'
 
 const ORDERS_KEY = 'orders'
 const QUEUE_KEY = 'queue'
 
+// Fetches and caches orders
 export function useOrders() {
   const { data, error, isLoading } = useSWR<Order[]>(
     ORDERS_KEY,
@@ -22,10 +23,12 @@ export function useOrders() {
   }
 }
 
+// Static menu configuration
 export function useDishes() {
   return { dishes: DISHES }
 }
 
+// Creates a new order and updates caches
 export function useCreateOrder() {
   return async (input: CreateOrderInput) => {
     const order = await ordersApi.create(input)
@@ -35,6 +38,7 @@ export function useCreateOrder() {
   }
 }
 
+// Updates an order status and updates caches
 export function useUpdateOrderStatus() {
   return async (orderId: string, status: 'preparing' | 'done') => {
     const order = await ordersApi.updateStatus(orderId, status)
@@ -44,6 +48,7 @@ export function useUpdateOrderStatus() {
   }
 }
 
+// Deletes an order and updates caches
 export function useDeleteOrder() {
   return async (orderId: string) => {
     await ordersApi.delete(orderId)
