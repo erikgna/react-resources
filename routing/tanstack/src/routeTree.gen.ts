@@ -9,20 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LayoutRouteImport } from './routes/_layout'
+import { Route as LayoutAboutRouteImport } from './routes/_layout.about'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as DashboardPostsRouteImport } from './routes/dashboard.posts'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
 
+const LayoutRoute = LayoutRouteImport.update({
+  id: '/_layout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayoutAboutRoute = LayoutAboutRouteImport.update({
+  id: '/_layout/about',
+  path: '/about',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
+const DashboardPostsRoute = DashboardPostsRouteImport.update({
+  id: '/dashboard/posts',
+  path: '/posts',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,75 +48,63 @@ const PostsPostIdRoute = PostsPostIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/_layout': typeof LayoutRoute
+  '/about': typeof LayoutAboutRoute
   '/dashboard': typeof DashboardRoute
+  '/dashboard/posts': typeof DashboardPostsRoute
   '/posts/$postId': typeof PostsPostIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/about': typeof LayoutAboutRoute
   '/dashboard': typeof DashboardRoute
+  '/dashboard/posts': typeof DashboardPostsRoute
   '/posts/$postId': typeof PostsPostIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/_layout': typeof LayoutRoute
+  '/_layout/about': typeof LayoutAboutRoute
   '/dashboard': typeof DashboardRoute
+  '/dashboard/posts': typeof DashboardPostsRoute
   '/posts/$postId': typeof PostsPostIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/dashboard' | '/posts/$postId'
+  fullPaths: '/' | '/_layout' | '/about' | '/dashboard' | '/dashboard/posts' | '/posts/$postId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/dashboard' | '/posts/$postId'
-  id: '__root__' | '/' | '/about' | '/dashboard' | '/posts/$postId'
+  to: '/' | '/about' | '/dashboard' | '/dashboard/posts' | '/posts/$postId'
+  id: '__root__' | '/' | '/_layout' | '/_layout/about' | '/dashboard' | '/dashboard/posts' | '/posts/$postId'
   fileRoutesById: FileRoutesById
+}
+export interface LayoutRouteChildren {
+  LayoutAboutRoute: typeof LayoutAboutRoute
+}
+export interface DashboardRouteChildren {
+  DashboardPostsRoute: typeof DashboardPostsRoute
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
+  LayoutRoute: typeof LayoutRoute
   DashboardRoute: typeof DashboardRoute
   PostsPostIdRoute: typeof PostsPostIdRoute
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/posts/$postId': {
-      id: '/posts/$postId'
-      path: '/posts/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof PostsPostIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
+const layoutRouteChildren: LayoutRouteChildren = {
+  LayoutAboutRoute: LayoutAboutRoute,
 }
+const LayoutRouteWithChildren = LayoutRoute._addFileChildren(layoutRouteChildren)
+
+const dashboardRouteChildren: DashboardRouteChildren = {
+  DashboardPostsRoute: DashboardPostsRoute,
+}
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(dashboardRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  DashboardRoute: DashboardRoute,
+  LayoutRoute: LayoutRouteWithChildren,
+  DashboardRoute: DashboardRouteWithChildren,
   PostsPostIdRoute: PostsPostIdRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,22 +1,25 @@
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
+import { RouterProvider } from '@tanstack/react-router'
+import { getRouter } from './router'
+import type { RouterContext } from './router'
 
-const router = createRouter({
-  routeTree,
-  defaultPreload: 'intent',
-  scrollRestoration: true,
-})
+const context: RouterContext = {
+  auth: { isAuthenticated: true, username: 'admin' },
+}
 
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
+const router = getRouter(context)
+
+async function main() {
+  if (import.meta.env.DEV) {
+    const { worker } = await import('./mocks/browser')
+    await worker.start({ onUnhandledRequest: 'bypass' })
+  }
+
+  const rootElement = document.getElementById('app')!
+  if (!rootElement.innerHTML) {
+    const root = ReactDOM.createRoot(rootElement)
+    root.render(<RouterProvider router={router} />)
   }
 }
 
-const rootElement = document.getElementById('app')!
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement)
-  root.render(<RouterProvider router={router} />)
-}
+main()
