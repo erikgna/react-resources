@@ -8,11 +8,11 @@ import ErrorMsg from '#/components/Error'
 import type { Post } from '#/types/post'
 
 const searchSchema = z.object({
-  page: z.number().catch(1),
+  page: z.number().catch(1).default(1),
   filter: z.string().optional(),
 })
 
-export const Route = createFileRoute('/dashboard/posts')({
+export const Route = createFileRoute('/dashboard/posts/')({
   validateSearch: searchSchema,
   loaderDeps: ({ search: { page, filter } }) => ({ page, filter }),
   loader: async ({ deps: { page, filter } }) => {
@@ -71,8 +71,8 @@ function PostsComponent() {
         {posts.map(post => (
           <li key={post.id}>
             <Link
-              to="/posts/$postId"
-              params={{ postId: String(post.id) }}
+              to="/dashboard/posts/$postId"
+              params={{ postId: post.id.toString() }}
               className="text-[var(--lagoon-deep)] hover:underline"
             >
               {post.title}

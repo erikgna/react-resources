@@ -1,6 +1,7 @@
 import { createLazyFileRoute, Link } from '@tanstack/react-router'
 
-export const Route = createLazyFileRoute('/_layout/about')({
+// This is the component that will be loaded lazily (only when the route is matched)
+export const Route = createLazyFileRoute('/about/_layout/')({
   component: AboutComponent,
 })
 

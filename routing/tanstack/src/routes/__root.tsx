@@ -1,13 +1,13 @@
 import { Link, Outlet, createRootRouteWithContext, useMatch, useMatches } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { RouterContext } from '../router'
+
+import NotFound from '../components/NotFound'
 
 import '../styles.css'
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
-  notFoundComponent: NotFoundComponent,
+  notFoundComponent: NotFound,
 })
 
 function RootComponent() {
@@ -17,7 +17,7 @@ function RootComponent() {
         <Link to="/" className="nav-link font-semibold" activeProps={{ className: 'is-active' }} activeOptions={{ exact: true }}>
           Home
         </Link>
-        <Link to="/dashboard/posts" className="nav-link" activeProps={{ className: 'is-active' }}>
+        <Link to="/dashboard/posts" search={{ page: 1 }} className="nav-link" activeProps={{ className: 'is-active' }}>
           Dashboard
         </Link>
         <Link to="/about" className="nav-link" activeProps={{ className: 'is-active' }}>
@@ -26,10 +26,6 @@ function RootComponent() {
       </header>
       <Breadcrumbs />
       <Outlet />
-      <TanStackDevtools
-        config={{ position: 'bottom-right' }}
-        plugins={[{ name: 'TanStack Router', render: <TanStackRouterDevtoolsPanel /> }]}
-      />
     </>
   )
 }
@@ -37,11 +33,12 @@ function RootComponent() {
 function Breadcrumbs() {
   // useMatches — returns every route match currently active in the tree (root → leaf)
   const matches = useMatches()
+  console.log(matches)
 
   // useMatch — check if one specific route is matched; returns null if not
-  const postMatch = useMatch({ from: '/posts/$postId', shouldThrow: false })
+  const postMatch = useMatch({ from: '/dashboard/posts/$postId', shouldThrow: false })
 
-  const crumbs = matches.filter(m => m.pathname !== '/' && !m.id.startsWith('/_layout'))
+  const crumbs = Array.from(new Map(matches.filter(m => m.pathname !== '/').map(m => [m.pathname.replace(/\/$/, ''), m])).values());
   if (crumbs.length === 0) return null
 
   return (
@@ -61,14 +58,5 @@ function Breadcrumbs() {
         <span className="ml-auto text-[var(--lagoon-deep)] font-mono">postId: {postMatch.params.postId}</span>
       )}
     </nav>
-  )
-}
-
-function NotFoundComponent() {
-  return (
-    <div className="page-wrap px-4 pt-10 flex flex-col gap-3">
-      <h1 className="text-2xl font-semibold">404 — Page not found</h1>
-      <Link to="/" className="text-[var(--lagoon-deep)] hover:underline">← Go home</Link>
-    </div>
   )
 }

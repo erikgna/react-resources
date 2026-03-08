@@ -6,9 +6,9 @@ import ErrorMsg from '#/components/Error'
 
 import type { Post } from '#/types/post'
 
-export const Route = createFileRoute('/posts/$postId')({
+export const Route = createFileRoute('/dashboard/posts/$postId')({
   loader: async ({ params: { postId } }) => {
-    if (postId === '0') throw redirect({ to: '/dashboard/posts' })
+    if (postId === '0') throw redirect({ to: '/dashboard/posts', search: { page: 1 } })
 
     const res = await fetch(`/posts/${postId}`)
     if (!res.ok) throw notFound()
@@ -45,13 +45,13 @@ function PostComponent() {
       <h2 className="text-lg font-semibold mt-4">Related posts</h2>
       <Suspense fallback={<Loading />}>
         <Await promise={relatedPosts}>
-          {(related) => (
+          {(related: Post[]) => (
             <ul className="flex flex-col gap-1">
-              {related.map(r => (
+              {related.map((r: Post) => (
                 <li key={r.id}>
                   <Link
-                    to="/posts/$postId"
-                    params={{ postId: String(r.id) }}
+                    to="/dashboard/posts/$postId"
+                    params={{ postId: r.id.toString() }}
                     className="text-[var(--lagoon-deep)] hover:underline"
                   >
                     {r.title}
