@@ -51,7 +51,7 @@ export default function Home() {
       </p>
       {features.map(f => (
         <div key={f.href} className="flex flex-col gap-0.5">
-          <Link href={f.href} className="font-mono text-sm text-blue-600 hover:underline dark:text-blue-400">
+          <Link to={f.href} className="font-mono text-sm text-blue-600 hover:underline dark:text-blue-400">
             {f.label}
           </Link>
           <p className="text-xs text-gray-500">{f.desc}</p>

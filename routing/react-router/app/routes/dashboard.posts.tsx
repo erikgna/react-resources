@@ -36,7 +36,7 @@ export function HydrateFallback() {
 }
 
 // [Data] shouldRevalidate — control when the loader re-runs
-export function shouldRevalidate({ currentUrl, nextUrl, defaultShouldRevalidate }: Route.ShouldRevalidateFunctionArgs) {
+export function shouldRevalidate({ currentUrl, nextUrl, defaultShouldRevalidate }: any) {
   // Skip revalidation if only the hash changed
   if (currentUrl.pathname === nextUrl.pathname && currentUrl.search === nextUrl.search) {
     return false;
