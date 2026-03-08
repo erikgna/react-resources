@@ -6,12 +6,22 @@ import LikeButton from './_components/LikeButton'
 
 type Props = { params: Promise<{ postId: string }> }
 
+/*
+ * generateMetadata is used to generate the metadata for the postId route.
+ * This is used to generate the metadata for the postId route.
+ * This is useful for SEO and performance.
+ */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { postId } = await params
   const post = getPost(Number(postId))
   return { title: post ? `${post.title} — Dashboard` : 'Post not found' }
 }
 
+/*
+ * generateStaticParams is used to pre-generate the static pages for the postId route.
+ * This is used to avoid the need to generate the page on the fly for each postId.
+ * This is useful for SEO and performance.
+ */
 export function generateStaticParams() {
   return getPosts().map(p => ({ postId: String(p.id) }))
 }
@@ -20,6 +30,7 @@ export default async function PostPage({ params }: Props) {
   const { postId } = await params
   const post = getPost(Number(postId))
 
+  // If the post is not found, throw a notFound error. This will render the not-found.tsx file.
   if (!post) notFound()
 
   return (

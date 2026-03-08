@@ -1,5 +1,8 @@
 'use client'
 
+/*
+ * Error is used to display the error message when the post is not found.
+ */
 export default function Error({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex flex-col gap-3">

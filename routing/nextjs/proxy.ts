@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 
 const isAuthenticated = true
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (!isAuthenticated) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
