@@ -1,18 +1,15 @@
 import { createRouter } from '@tanstack/react-router'
-import { rootRoute, type RouterContext } from './routes/__root'
-import { indexRoute } from './routes/index'
-import { aboutLayoutRoute } from './routes/about/_layout'
-import { aboutIndexRoute } from './routes/about/index'
-import { dashboardRoute } from './routes/dashboard/index'
-import { postsRoute } from './routes/dashboard/posts/index'
-import { postIdRoute } from './routes/dashboard/posts/$postId'
+import { rootRoute, type RouterContext } from './routes/root'
+import { homeRoute } from './routes/home'
+import { aboutLayoutRoute, aboutRoute } from './routes/about'
+import { dashboardRoute } from './routes/dashboard'
+import { postsRoute } from './routes/posts'
+import { postDetailRoute } from './routes/post-detail'
 
 const routeTree = rootRoute.addChildren([
-  indexRoute,
-  aboutLayoutRoute.addChildren([aboutIndexRoute]),
-  dashboardRoute.addChildren([
-    postsRoute.addChildren([postIdRoute]),
-  ]),
+  homeRoute,
+  aboutLayoutRoute.addChildren([aboutRoute]),
+  dashboardRoute.addChildren([postsRoute.addChildren([postDetailRoute])]),
 ])
 
 export function getRouter(context: RouterContext) {

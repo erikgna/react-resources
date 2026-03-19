@@ -1,6 +1,6 @@
-import { createRootRouteWithContext, Link, Outlet, useMatch, useMatches } from '@tanstack/react-router'
-import NotFound from '../components/NotFound'
-import '../styles.css'
+import { Link, Outlet, createRootRouteWithContext, useMatch, useMatches } from '@tanstack/react-router'
+import NotFound from '#/components/NotFound'
+import '#/styles.css'
 
 export interface RouterContext {
   auth: {
@@ -60,8 +60,8 @@ function Breadcrumbs() {
   if (crumbs.length === 0) return null
 
   return (
-    <nav className="page-wrap px-4 py-2 flex gap-1.5 items-center text-xs text-[var(--sea-ink-soft)] border-b border-[var(--line)]">
-      <Link to="/" className="hover:text-[var(--sea-ink)]">
+    <nav className="page-wrap px-4 py-2 flex gap-1.5 items-center text-xs text-(--sea-ink-soft) border-b border-(--line)">
+      <Link to="/" className="hover:text-(--sea-ink)">
         home
       </Link>
       {crumbs.map(m => {
@@ -69,14 +69,14 @@ function Breadcrumbs() {
         return (
           <span key={m.id} className="flex gap-1.5 items-center">
             <span className="opacity-40">/</span>
-            <Link to={m.pathname as never} className="hover:text-[var(--sea-ink)] capitalize">
+            <Link to={m.pathname as never} className="hover:text-(--sea-ink) capitalize">
               {label}
             </Link>
           </span>
         )
       })}
       {postMatch && (
-        <span className="ml-auto text-[var(--lagoon-deep)] font-mono">
+        <span className="ml-auto text-(--lagoon-deep) font-mono">
           postId: {postMatch.params.postId}
         </span>
       )}

@@ -1,7 +1,7 @@
-import { createRoute, Link, useBlocker } from '@tanstack/react-router'
+import { Link, createRoute, useBlocker } from '@tanstack/react-router'
 import { useState } from 'react'
 import { z } from 'zod'
-import { dashboardRoute } from '../index'
+import { dashboardRoute } from './dashboard'
 import Loading from '#/components/Loading'
 import ErrorMsg from '#/components/Error'
 import type { Post } from '#/types/post'
@@ -50,13 +50,13 @@ function PostsComponent() {
             <div className="flex gap-2">
               <button
                 onClick={() => blocker.proceed()}
-                className="px-3 py-1.5 rounded-lg text-sm bg-[var(--sea-ink)] text-white dark:bg-white dark:text-[var(--sea-ink)]"
+                className="px-3 py-1.5 rounded-lg text-sm bg-(--sea-ink) text-white dark:bg-white dark:text-(--sea-ink)"
               >
                 Leave
               </button>
               <button
                 onClick={() => blocker.reset()}
-                className="px-3 py-1.5 border border-[var(--line)] rounded-lg text-sm"
+                className="px-3 py-1.5 border border-(--line) rounded-lg text-sm"
               >
                 Stay
               </button>
@@ -64,13 +64,13 @@ function PostsComponent() {
           </div>
         </div>
       )}
-      <p className="text-xs text-[var(--sea-ink-soft)]">
+      <p className="text-xs text-(--sea-ink-soft)">
         Logged in as: <strong>{auth.username}</strong>
       </p>
       <h2 className="text-xl font-semibold">Posts — Page {page}</h2>
 
       <input
-        className="border border-[var(--line)] rounded-lg px-3 py-2 bg-[var(--surface)] w-64"
+        className="border border-(--line) rounded-lg px-3 py-2 bg-(--surface) w-64"
         placeholder="Filter posts..."
         defaultValue={filter}
         onChange={e =>
@@ -84,7 +84,7 @@ function PostsComponent() {
             <Link
               to="/dashboard/posts/$postId"
               params={{ postId: post.id.toString() }}
-              className="text-[var(--lagoon-deep)] hover:underline"
+              className="text-(--lagoon-deep) hover:underline"
             >
               {post.title}
             </Link>
@@ -96,22 +96,22 @@ function PostsComponent() {
         <button
           disabled={page <= 1}
           onClick={() => navigate({ search: prev => ({ ...prev, page: prev.page - 1 }) })}
-          className="px-3 py-1 border border-[var(--line)] rounded-lg disabled:opacity-40"
+          className="px-3 py-1 border border-(--line) rounded-lg disabled:opacity-40"
         >
           Prev
         </button>
         <button
           onClick={() => navigate({ search: prev => ({ ...prev, page: prev.page + 1 }) })}
-          className="px-3 py-1 border border-[var(--line)] rounded-lg"
+          className="px-3 py-1 border border-(--line) rounded-lg"
         >
           Next
         </button>
       </div>
 
-      <div className="mt-2 flex flex-col gap-2 border-t border-[var(--line)] pt-4">
+      <div className="mt-2 flex flex-col gap-2 border-t border-(--line) pt-4">
         <label className="text-sm font-medium">
           Quick Note{' '}
-          <span className="text-xs font-normal text-[var(--sea-ink-soft)]">
+          <span className="text-xs font-normal text-(--sea-ink-soft)">
             useBlocker — type here then navigate away
           </span>
         </label>
@@ -120,7 +120,7 @@ function PostsComponent() {
           onChange={e => setNote(e.target.value)}
           rows={2}
           placeholder="Start typing to arm the blocker..."
-          className="border border-[var(--line)] rounded-lg px-3 py-2 bg-[var(--surface)] text-sm resize-none"
+          className="border border-(--line) rounded-lg px-3 py-2 bg-(--surface) text-sm resize-none"
         />
       </div>
     </div>

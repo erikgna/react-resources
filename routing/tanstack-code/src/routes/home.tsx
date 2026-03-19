@@ -1,16 +1,23 @@
-import { createRoute, Link } from '@tanstack/react-router'
-import { rootRoute } from './__root'
+import { Link, createRoute } from '@tanstack/react-router'
+import { rootRoute } from './root'
 
-export const indexRoute = createRoute({
+export const homeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: Home,
 })
 
-const routes: Array<{ label: string; description: string; to: string; params?: Record<string, string>; search?: Record<string, unknown> }> = [
+const demoRoutes: Array<{
+  label: string
+  description: string
+  to: string
+  params?: Record<string, string>
+  search?: Record<string, unknown>
+}> = [
   {
     label: '/dashboard/posts',
-    description: 'auth guard (beforeLoad + context) · search params (Zod) · loaderDeps · pending/error · useRouteContext · useBlocker',
+    description:
+      'auth guard (beforeLoad + context) · search params (Zod) · loaderDeps · pending/error · useRouteContext · useBlocker',
     to: '/dashboard/posts',
     search: { page: 1 },
   },
@@ -48,17 +55,17 @@ function Home() {
   return (
     <main className="page-wrap px-4 pb-8 pt-10 flex flex-col gap-2">
       <h1 className="text-2xl font-semibold mb-4">TanStack Router — Code-Based Routing POC</h1>
-      {routes.map(r => (
+      {demoRoutes.map(r => (
         <div key={r.label} className="flex flex-col gap-0.5">
           <Link
             to={r.to as never}
             params={r.params as never}
             search={r.search as never}
-            className="text-[var(--lagoon-deep)] hover:underline font-mono text-sm"
+            className="text-(--lagoon-deep) hover:underline font-mono text-sm"
           >
             {r.label}
           </Link>
-          <p className="text-xs text-[var(--sea-ink-soft)]">{r.description}</p>
+          <p className="text-xs text-(--sea-ink-soft)">{r.description}</p>
         </div>
       ))}
     </main>
