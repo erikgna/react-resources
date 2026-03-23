@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BackgroundSync } from './BackgroundSync'
 import { PushNotifications } from './PushNotifications'
+import { SharedSensorData } from './SharedSensorData'
 
 type SwState = 'unsupported' | 'registering' | 'active' | 'no-controller'
 
@@ -10,6 +11,8 @@ interface FetchResult {
   timestamp: string
 }
 
+// Read all request keys from the api-v1 cache and return their URLs.
+// Used to show which endpoints the SW has cached for offline use.
 async function getCachedUrls(): Promise<string[]> {
   if (!('caches' in window)) return []
   const cache = await caches.open('api-v1')
@@ -17,6 +20,8 @@ async function getCachedUrls(): Promise<string[]> {
   return keys.map((r) => r.url)
 }
 
+// Delete the entire api-v1 cache bucket.
+// Forces the next fetch to go to the network and get a fresh MISS response.
 async function clearApiCache(): Promise<void> {
   if (!('caches' in window)) return
   await caches.delete('api-v1')
@@ -34,14 +39,22 @@ function App() {
       setSwState('unsupported')
       return
     }
+    // ready resolves once the SW is active. Check controller to distinguish
+    // "SW active but not yet controlling this page" (first load) from "active
+    // and controlling" (subsequent loads or after clients.claim()).
     navigator.serviceWorker.ready.then(() => {
       setSwState(navigator.serviceWorker.controller ? 'active' : 'no-controller')
     })
+    // controllerchange fires when clients.claim() completes in the SW,
+    // updating the state without requiring a page reload.
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       setSwState('active')
     })
   }, [])
 
+  // Fetch a post through the SW. The X-SW-Cache response header injected by
+  // the SW indicates whether the response came from the network (MISS) or
+  // the cache (HIT, when offline).
   async function fetchPost() {
     setLoading(true)
     try {
@@ -66,6 +79,8 @@ function App() {
     setResult(null)
   }
 
+  // Re-read the cache keys without triggering a fetch — useful after the SW
+  // has cached something in the background that the UI hasn't reflected yet.
   async function refreshCacheList() {
     setCachedUrls(await getCachedUrls())
   }
@@ -162,19 +177,9 @@ function App() {
         )}
       </div>
 
-      <details style={{ marginTop: '2rem', fontSize: 13, color: '#888' }}>
-        <summary>How to test caching</summary>
-        <ol style={{ lineHeight: 2 }}>
-          <li>Fetch a post — X-SW-Cache will show <strong>MISS</strong> (network hit)</li>
-          <li>Fetch the same post again — still <strong>MISS</strong> because SW uses network-first</li>
-          <li>Open DevTools → Network → set throttling to <strong>Offline</strong></li>
-          <li>Fetch the same post — X-SW-Cache shows <strong>HIT</strong> (served from cache)</li>
-          <li>Fetch a different post ID that was never cached — returns 503 error body</li>
-        </ol>
-      </details>
-
       <BackgroundSync />
       <PushNotifications />
+      <SharedSensorData />
     </div>
   )
 }

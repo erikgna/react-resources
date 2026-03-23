@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { addToOutbox, clearOutbox, getAllOutbox, OutboxItem } from './db'
+import { addToOutbox, clearOutbox, getAllOutbox, type OutboxItem } from './db'
 
 const SYNC_TAG = 'sync-outbox'
 
@@ -19,6 +19,7 @@ export function BackgroundSync() {
   const [log, setLog] = useState<SyncLogEntry[]>([])
   const channelRef = useRef<BroadcastChannel | null>(null)
 
+  // Prepend a timestamped entry so the most recent event stays at the top.
   function appendLog(message: string, type: SyncLogEntry['type'] = 'info') {
     setLog((prev) => [
       { message, type, timestamp: new Date().toLocaleTimeString() },
@@ -26,6 +27,8 @@ export function BackgroundSync() {
     ])
   }
 
+  // Pull the latest outbox state from IndexedDB and sync it into React state.
+  // Called after any write (add, clear) and after each SW sync event.
   async function refreshOutbox() {
     setOutbox(await getAllOutbox())
   }
@@ -44,6 +47,8 @@ export function BackgroundSync() {
     window.addEventListener('online', onOnline)
     window.addEventListener('offline', onOffline)
 
+    // Receive status updates broadcast by the SW during a sync run.
+    // The SW sends granular per-item events so the log reflects real progress.
     const channel = new BroadcastChannel('sw-sync')
     channelRef.current = channel
     channel.onmessage = (event) => {
@@ -71,6 +76,8 @@ export function BackgroundSync() {
     e.preventDefault()
     if (!title.trim()) return
 
+    // Write to IndexedDB first so the item is safe even if the tab closes
+    // before the SW gets a chance to sync it.
     const id = await addToOutbox({
       title,
       body,
@@ -83,20 +90,26 @@ export function BackgroundSync() {
     await refreshOutbox()
 
     if (!supported) {
+      // BackgroundSync API unavailable (e.g. Firefox, Safari).
+      // Fall back to a direct in-tab fetch so the item still goes through.
       appendLog('BackgroundSync not supported — falling back to immediate fetch', 'info')
       await immediateSync()
       return
     }
 
     try {
-      const reg = await navigator.serviceWorker.ready
-      await (reg as ServiceWorkerRegistration & { sync: { register(tag: string): Promise<void> } }).sync.register(SYNC_TAG)
+      const worker = await navigator.serviceWorker.ready as ServiceWorkerRegistration & { sync: { register(tag: string): Promise<void> } };
+      // Registering the tag hands control to the browser — it will fire the SW
+      // 'sync' event when online, even if this tab is closed before that happens.
+      await worker.sync.register(SYNC_TAG)
       appendLog(`Sync tag "${SYNC_TAG}" registered`, 'info')
     } catch (err) {
       appendLog(`sync.register failed: ${String(err)}`, 'error')
     }
   }
 
+  // Fallback sync used when the BackgroundSync API is unavailable.
+  // Reads pending items directly from IndexedDB and POSTs them in-tab.
   async function immediateSync() {
     const items = (await getAllOutbox()).filter((i) => i.status === 'pending')
     appendLog(`Immediate sync: ${items.length} item(s)`, 'info')
@@ -213,17 +226,6 @@ export function BackgroundSync() {
           )}
         </div>
       </div>
-
-      <details style={{ marginTop: '1.5rem', fontSize: 13, color: '#888' }}>
-        <summary>How to test background sync</summary>
-        <ol style={{ lineHeight: 2 }}>
-          <li>Submit a post while <strong>online</strong> — sync fires immediately, item turns green</li>
-          <li>Open DevTools → Network → set to <strong>Offline</strong></li>
-          <li>Submit more posts — they queue as <strong>pending</strong> (orange)</li>
-          <li>Set network back to <strong>Online</strong></li>
-          <li>Browser triggers the SW sync event — items turn green and log shows server response IDs</li>
-        </ol>
-      </details>
     </div>
   )
 }

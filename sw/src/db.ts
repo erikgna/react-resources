@@ -12,6 +12,9 @@ export interface OutboxItem {
   responseId?: number;
 }
 
+// Opens (or creates) the versioned IndexedDB database.
+// onupgradeneeded only fires on first creation or when DB_VERSION increments,
+// making it the right place to define object stores and indexes.
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -23,10 +26,14 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
+// Shorthand to open a transaction and return the object store in one step.
+// Each IDB operation needs its own transaction scoped to the correct mode.
 function store(db: IDBDatabase, mode: IDBTransactionMode) {
   return db.transaction(OUTBOX_STORE, mode).objectStore(OUTBOX_STORE);
 }
 
+// Insert a new item into the outbox and return the auto-assigned numeric ID.
+// The ID is used later to match SW sync responses back to the original record.
 export async function addToOutbox(item: Omit<OutboxItem, 'id'>): Promise<number> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -36,6 +43,8 @@ export async function addToOutbox(item: Omit<OutboxItem, 'id'>): Promise<number>
   });
 }
 
+// Fetch all records from the outbox regardless of status.
+// The caller filters by status when needed (e.g. show all in UI, sync only pending).
 export async function getAllOutbox(): Promise<OutboxItem[]> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -45,6 +54,7 @@ export async function getAllOutbox(): Promise<OutboxItem[]> {
   });
 }
 
+// Delete every record from the outbox store without dropping the store itself.
 export async function clearOutbox(): Promise<void> {
   const db = await openDB();
   return new Promise((resolve, reject) => {

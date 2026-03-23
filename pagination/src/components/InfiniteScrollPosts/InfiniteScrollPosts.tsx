@@ -29,9 +29,21 @@ export default function InfiniteScrollPosts() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting && !loading && page < totalPages) setPage((prev) => prev + 1);
+                // entries is an array of observed elements (we only use one)
+                const entry = entries[0];
+
+                // When the element is fully visible (based on threshold)
+                // AND we're not currently loading
+                // AND there are more pages to fetch
+                if (entry.isIntersecting && !loading && page < totalPages) {
+                    // Increment page → triggers new data fetch
+                    setPage((prev) => prev + 1);
+                }
             },
-            { threshold: 1 }
+            {
+                // threshold: 1 means the element must be 100% visible
+                threshold: 1,
+            }
         );
 
         const current = observerRef.current;

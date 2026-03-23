@@ -14,6 +14,8 @@ export function PushNotifications() {
   const channelRef = useRef<BroadcastChannel | null>(null)
 
   useEffect(() => {
+    // Listen on the same BroadcastChannel the SW posts to when a push arrives.
+    // This lets the page react in real time even if the tab is in the foreground
     const channel = new BroadcastChannel('sw-push')
     channelRef.current = channel
     channel.onmessage = (event) => {
@@ -25,6 +27,9 @@ export function PushNotifications() {
     return () => channel.close()
   }, [])
 
+  // Prompt the user for notification permission.
+  // The browser only allows one prompt; after 'denied' the button is disabled
+  // and the user must reset it manually in browser settings.
   async function requestPermission() {
     const result = await Notification.requestPermission()
     setPermission(result)
@@ -38,7 +43,7 @@ export function PushNotifications() {
 
   return (
     <div style={{ marginTop: '3rem', borderTop: '1px solid #333', paddingTop: '2rem' }}>
-      <h2>Push Notifications POC</h2>
+      <h2>Push Notifications</h2>
 
       <div style={{ marginBottom: '1.5rem', display: 'flex', gap: 12, alignItems: 'center' }}>
         <span>
@@ -56,7 +61,7 @@ export function PushNotifications() {
         <strong>Received pushes ({log.length})</strong>
         {log.length === 0 ? (
           <p style={{ color: '#888', fontSize: 13 }}>
-            no pushes yet — simulate one via DevTools (see instructions below)
+            no notifications yet
           </p>
         ) : (
           <div style={{ marginTop: 8 }}>
@@ -79,26 +84,6 @@ export function PushNotifications() {
           </div>
         )}
       </div>
-
-      <details open style={{ fontSize: 13, color: '#888' }}>
-        <summary style={{ cursor: 'pointer', marginBottom: 8 }}>How to test with DevTools</summary>
-        <ol style={{ lineHeight: 2.2 }}>
-          <li>Grant notification permission above</li>
-          <li>Open DevTools → <strong>Application</strong> tab → <strong>Service Workers</strong></li>
-          <li>
-            Find the <strong>Push</strong> input field and enter a JSON payload:
-            <pre style={{ background: '#111', padding: 8, borderRadius: 4, marginTop: 4 }}>
-              {`{"title":"Hello","body":"World","icon":"/vite.svg","url":"/"}`}
-            </pre>
-          </li>
-          <li>Click <strong>Push</strong> — the SW fires the push event and shows a notification</li>
-          <li>The notification appears above and in the OS notification tray</li>
-          <li>Clicking the notification focuses/opens the app (handled by <code>notificationclick</code>)</li>
-        </ol>
-        <p style={{ marginTop: 8 }}>
-          Plain text also works — the SW falls back to using it as the body.
-        </p>
-      </details>
     </div>
   )
 }
