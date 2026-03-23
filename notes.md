@@ -1,20 +1,7 @@
-## POCS
-The POC should use the template from LT
-Remake Fetch vs Axios in React
-
-## Routing
-Compare frameworks
-Tanstack Router
-React Router Dom
-NextJS
-React Navigation
+## Last week questions
+For lazy routes, they handle it using the Suspense component, when we browse to the route, it will load the component and render it.
+We can also show fallback UI while the component is loading.
 
 ## Pagination
 Compare trade offs
 One request paginated from back and one not paginated
-
-## LT
-Get keywords from presentation and go deep
-Can ask about monoliths
-
-https://tanstack.com/router/latest/docs/comparison
