@@ -54,3 +54,16 @@ You shall use claude -p “using claude CLI as API”
 You will need to build a judge agent
 [12:30 AM]
 PS: This challenge might require all teams agree in a common protocol and diego approve such protocol.
+
+
+Web components - criar components puros com JS
+Criar um web component puro e importar em um react
+
+Pesquisar problemas que podem ocorrer com versoes diferentes module federation
+
+remove entry vs manifest
+build common js vs esnext
+
+como compartilhar estados entre microfronts
+
+
