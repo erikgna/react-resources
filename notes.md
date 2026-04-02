@@ -55,7 +55,7 @@ You will need to build a judge agent
 [12:30 AM]
 PS: This challenge might require all teams agree in a common protocol and diego approve such protocol.
 
-
+## Bruno
 Web components - criar components puros com JS
 Criar um web component puro e importar em um react
 
