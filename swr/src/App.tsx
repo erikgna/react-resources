@@ -4,7 +4,6 @@ import { mutate } from "swr";
 import { useUser } from "./hooks/useUser";
 import { usePosts } from "./hooks/usePosts";
 import { useUpdateUser } from "./hooks/useUpdateUser";
-import { prefetchUser } from "./prefetch";
 import { fetcher } from "./api";
 
 function Avatar({ userId }: { userId: string }) {
@@ -71,14 +70,6 @@ function UserPosts({ userId }: { userId: string }) {
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }
 
-function PrefetchDemo() {
-  return (
-    <button onMouseEnter={() => prefetchUser("1")}>
-      Hover to Prefetch User
-    </button>
-  );
-}
-
 function GlobalRefresh() {
   return (
     <button onClick={() => mutate(["/api/user", "1"])}>Global Refresh</button>
@@ -126,7 +117,6 @@ export default function App() {
 
       <UserPosts userId="1" />
 
-      <PrefetchDemo />
       <GlobalRefresh />
 
       <InfiniteUsers />
