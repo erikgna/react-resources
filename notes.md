@@ -54,9 +54,6 @@ PS: This challenge might require all teams agree in a common protocol and diego 
 
 ## Bruno
 
-Web components - criar components puros com JS
-Criar um web component puro e importar em um react
-
 #### 1. Pesquisar problemas que podem ocorrer com versoes diferentes module federation
 
 Basicamente vai criar instabilidade no build e no runtime, alguns componentes podem quebrar ou nao funcionar corretamente.
