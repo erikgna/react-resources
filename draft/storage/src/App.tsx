@@ -1,4 +1,6 @@
+import CanvasAPIPOC from "./Canvas";
 import { Cookie } from "./Cookie";
+import CSPPOC from "./CSPPOC";
 import DragAndDropDemo from "./DragAndDrop";
 import { IndexedDB } from "./IndexedDB";
 import IntersectionObserverPOC from "./IntersectionObserver";
@@ -13,7 +15,9 @@ function App() {
       {/* <IndexedDB /> */}
       {/* <DragAndDropDemo /> */}
       {/* <IntersectionObserverPOC /> */}
-      <MutationObserverPOC />
+      {/* <MutationObserverPOC /> */}
+      {/* <CanvasAPIPOC /> */}
+      <CSPPOC />
     </>
   );
 }

@@ -1,13 +1,27 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>storage</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>storage</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self';  
+                 script-src 'self' 'unsafe-inline'; 
+                 style-src 'self' 'unsafe-inline'; 
+                 img-src 'self';">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
+
+<!-- 
+default-src 'self': The fallback. Only allow content from your own domain.
+script-src 'self': Only allow .js files from your server. No external scripts.
+img-src 'self': Blocks images from other domains (prevents "hotlinking" and some tracking).
+style-src 'self' and 'unsafe-inline': Required for many CSS-in-JS libraries to work. 
+-->
