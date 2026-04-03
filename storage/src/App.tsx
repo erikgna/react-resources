@@ -1,4 +1,5 @@
 import { Cookie } from "./Cookie";
+import { IndexedDB } from "./IndexedDB";
 import { Storage } from "./Storage";
 
 function App() {
@@ -6,6 +7,7 @@ function App() {
     <>
       <Storage />
       <Cookie />
+      <IndexedDB />
     </>
   );
 }
