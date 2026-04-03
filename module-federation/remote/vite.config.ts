@@ -14,10 +14,12 @@ export default defineConfig({
         './Counter': './src/Counter',
         // Plain TS module — federation can expose any ES module, not just components
         './utils': './src/utils',
+        './store': './src/store',
       },
       shared: {
         react: { singleton: true },
         'react-dom': { singleton: true },
+        zustand: { singleton: true },
       },
     }),
     react(),

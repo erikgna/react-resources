@@ -1,5 +1,9 @@
+import { useStore } from "./store";
+
 export function Button() {
-    return <button>Click me</button>
+  const { count, inc } = useStore();
+
+  return <button onClick={inc}>Click me {count} times</button>;
 }
 
-export default Button
+export default Button;

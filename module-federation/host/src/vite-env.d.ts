@@ -16,3 +16,7 @@ declare module 'remote_app/Button' {
   declare module 'remote_app/utils' {
     export function formatCount(n: number): string
   }
+
+  declare module 'remote_app/store' {
+    export function useStore<T>(selector: (state: any) => T): T
+  }
