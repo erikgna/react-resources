@@ -5,6 +5,8 @@ class CustomCounter extends HTMLElement {
 
   constructor() {
     super();
+    // create private dom tree to hide internals from JS or CSS styles outside this element.
+    // It's open to allow outside JS to access the shadow element
     this.attachShadow({ mode: "open" });
     this.count = 0;
   }
@@ -40,4 +42,5 @@ class CustomCounter extends HTMLElement {
   }
 }
 
+// register the custom element to be used
 customElements.define("custom-counter", CustomCounter);
