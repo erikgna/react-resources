@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wasm Image Processing</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: monospace; background: #0f0f0f; color: #e0e0e0; padding: 24px; }
+    h1 { font-size: 1.2rem; margin-bottom: 16px; letter-spacing: 0.05em; }
+    .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+    input[type="file"] { color: #aaa; }
+    button {
+      background: #1e1e2e; border: 1px solid #444; color: #cdd6f4;
+      padding: 6px 14px; cursor: pointer; font-family: monospace; font-size: 0.85rem;
+    }
+    button:hover { background: #313244; }
+    #status { font-size: 0.8rem; color: #89b4fa; margin-bottom: 16px; }
+    .canvases { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+    .canvas-box { display: flex; flex-direction: column; gap: 6px; }
+    .canvas-label { font-size: 0.75rem; color: #888; }
+    canvas { border: 1px solid #333; max-width: 480px; display: block; }
+    table { border-collapse: collapse; font-size: 0.8rem; width: 100%; max-width: 520px; }
+    th, td { border: 1px solid #333; padding: 6px 12px; text-align: left; }
+    th { background: #1e1e2e; color: #cba6f7; }
+    td:nth-child(2), td:nth-child(3) { color: #a6e3a1; }
+    td:nth-child(4) { color: #f9e2af; }
+  </style>
+</head>
+<body>
+  <h1>WebAssembly Image Processing POC</h1>
+
+  <div class="controls">
+    <input type="file" id="file-input" accept="image/*" />
+    <button id="btn-grayscale">Grayscale</button>
+    <button id="btn-blur">Blur</button>
+    <button id="btn-edge">Edge Detect</button>
+    <button id="btn-blur-chain">Blur ×10</button>
+    <button id="btn-gaussian">Gaussian 11×11</button>
+    <button id="btn-resize">Resize ½</button>
+  </div>
+
+  <div id="status">Initializing...</div>
+
+  <div class="canvases">
+    <div class="canvas-box">
+      <span class="canvas-label">Original</span>
+      <canvas id="original"></canvas>
+    </div>
+    <div class="canvas-box">
+      <span class="canvas-label">Processed</span>
+      <canvas id="processed"></canvas>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Filter</th>
+        <th>Wasm (ms)</th>
+        <th>JS (ms)</th>
+        <th>Speedup</th>
+      </tr>
+    </thead>
+    <tbody id="benchmark-body"></tbody>
+  </table>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
