@@ -8,6 +8,8 @@ import init, {
   edge_detect,
   resize as wasmResize,
   resize_buf_size,
+  bilateral_filter as wasmBilateral,
+  mandelbrot as wasmMandelbrot,
 } from "./wasm-pkg/wasm_image.js";
 
 let memory: WebAssembly.Memory;
@@ -55,6 +57,23 @@ export class WasmImageProcessor {
     gaussian_blur(ptr, width, height);
     const result = this.copyOut(ptr, data.length);
     dealloc(ptr, data.length);
+    return result;
+  }
+
+  bilateralFilter(data: Uint8ClampedArray, width: number, height: number): Uint8ClampedArray {
+    const ptr = this.copyIn(data);
+    wasmBilateral(ptr, width, height);
+    const result = this.copyOut(ptr, data.length);
+    dealloc(ptr, data.length);
+    return result;
+  }
+
+  mandelbrot(width: number, height: number, maxIter: number): Uint8ClampedArray {
+    const len = width * height * 4;
+    const ptr = alloc(len);
+    wasmMandelbrot(ptr, width, height, maxIter);
+    const result = this.copyOut(ptr, len);
+    dealloc(ptr, len);
     return result;
   }
 

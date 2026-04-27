@@ -65,3 +65,17 @@ pub unsafe fn resize(
 pub fn resize_buf_size(dst_w: u32, dst_h: u32) -> usize {
     (dst_w * dst_h * 4) as usize
 }
+
+#[wasm_bindgen]
+pub unsafe fn bilateral_filter(ptr: *mut u8, width: u32, height: u32) {
+    let len = (width * height * 4) as usize;
+    let data = get_slice(ptr, len);
+    filters::bilateral::apply(data, width, height, 10, 10.0, 30.0);
+}
+
+#[wasm_bindgen]
+pub unsafe fn mandelbrot(ptr: *mut u8, width: u32, height: u32, max_iter: u32) {
+    let len = (width * height * 4) as usize;
+    let data = get_slice(ptr, len);
+    filters::mandelbrot::render(data, width, height, max_iter);
+}

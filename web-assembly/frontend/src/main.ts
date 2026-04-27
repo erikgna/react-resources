@@ -29,22 +29,34 @@ document.getElementById("file-input")!.addEventListener("change", async (e) => {
 });
 
 async function applyFilter(name: FilterName) {
-  if (!currentImage) return;
+  if (name !== "mandelbrot" && !currentImage) return;
   statusEl.textContent = "Processing...";
 
-  const { data, width, height } = currentImage;
+  if (name === "mandelbrot") {
+    const W = 800, H = 600, ITER = 500;
+    const result = wasm.mandelbrot(W, H, ITER);
+    renderToCanvas(processedCanvas, result, W, H);
+    const bench = await runBenchmark("mandelbrot", new ImageData(1, 1), wasm);
+    addBenchmarkRow("mandelbrot (800×600, iter=500)", bench.wasmMs, bench.jsMs);
+    statusEl.textContent = `Done — Wasm ${bench.wasmMs}ms vs JS ${bench.jsMs}ms`;
+    return;
+  }
+
+  const { data, width, height } = currentImage!;
   let result: Uint8ClampedArray;
 
   if (name === "grayscale") result = wasm.grayscale(data);
   else if (name === "blur") result = wasm.blur(data, width, height);
   else if (name === "blur-chain") result = wasm.blurChain(data, width, height, 10);
   else if (name === "gaussian") result = wasm.gaussianBlur(data, width, height);
+  else if (name === "bilateral") result = wasm.bilateralFilter(data, width, height);
   else result = wasm.edgeDetect(data, width, height);
 
   renderToCanvas(processedCanvas, result, width, height);
 
-  const bench = await runBenchmark(name, currentImage, wasm);
-  addBenchmarkRow(name, bench.wasmMs, bench.jsMs);
+  const bench = await runBenchmark(name, currentImage!, wasm);
+  const label = name === "bilateral" ? `bilateral (r=10, 441 exp/px)` : name;
+  addBenchmarkRow(label, bench.wasmMs, bench.jsMs);
 
   statusEl.textContent = `Done — Wasm ${bench.wasmMs}ms vs JS ${bench.jsMs}ms`;
 }
@@ -70,6 +82,8 @@ document.getElementById("btn-blur")!.addEventListener("click", () => applyFilter
 document.getElementById("btn-edge")!.addEventListener("click", () => applyFilter("edge"));
 document.getElementById("btn-blur-chain")!.addEventListener("click", () => applyFilter("blur-chain"));
 document.getElementById("btn-gaussian")!.addEventListener("click", () => applyFilter("gaussian"));
+document.getElementById("btn-bilateral")!.addEventListener("click", () => applyFilter("bilateral"));
+document.getElementById("btn-mandelbrot")!.addEventListener("click", () => applyFilter("mandelbrot"));
 document.getElementById("btn-resize")!.addEventListener("click", applyResize);
 
 init();
