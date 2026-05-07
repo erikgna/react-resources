@@ -18,19 +18,6 @@ export default function CSPPOC() {
       <h2 className="text-2xl font-bold mb-4 text-red-700">CSP Security POC</h2>
 
       <div className="space-y-6">
-        {/* Case 1: Trusted Image */}
-        <section>
-          <h3 className="font-semibold text-gray-700">
-            1. Trusted Source (Self)
-          </h3>
-          <p className="text-sm text-gray-500 mb-2">
-            This image is hosted on the same origin.
-          </p>
-          <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white">
-            ✓
-          </div>
-        </section>
-
         {/* Case 2: Blocked Image */}
         <section>
           <h3 className="font-semibold text-gray-700">
