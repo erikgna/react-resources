@@ -1,0 +1,5 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Fira Code', 'Cascadia Code', monospace; background: #0f0f0f; color: #e0e0e0; }
+button { cursor: pointer; font-family: inherit; }
+code { background: #1e1e1e; padding: 1px 5px; border-radius: 3px; font-size: 12px; color: #79c0ff; }
+pre code { background: none; padding: 0; }
