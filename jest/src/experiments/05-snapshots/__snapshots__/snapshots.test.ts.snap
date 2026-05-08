@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`custom serializer formats tagged objects 1`] = `
+<Money>{
+  "amount": 100,
+  "currency": "USD",
+}</Money>
+`;
+
+exports[`custom serializer nested tagged values 1`] = `
+<ApiResponse>{
+  "data": [
+    1,
+    2,
+    3,
+  ],
+  "status": 200,
+}</ApiResponse>
+`;
+
+exports[`toMatchSnapshot() — external array snapshot 1`] = `
+[
+  "alpha",
+  "beta",
+  "gamma",
+]
+`;
+
+exports[`toMatchSnapshot() — external named snapshot: user-admin 1`] = `
+{
+  "id": 1,
+  "permissions": [
+    "read",
+    "write",
+  ],
+  "role": "admin",
+}
+`;
+
+exports[`toMatchSnapshot() — external nested object snapshot 1`] = `
+{
+  "children": [
+    {
+      "name": "a",
+      "value": 1,
+    },
+    {
+      "children": [
+        {
+          "name": "c",
+          "value": 3,
+        },
+      ],
+      "name": "b",
+      "value": 2,
+    },
+  ],
+  "name": "root",
+}
+`;
+
+exports[`toMatchSnapshot() — external plain object snapshot 1`] = `
+{
+  "debug": false,
+  "retries": 3,
+  "tags": [
+    "unit",
+    "fast",
+  ],
+  "timeout": 5000,
+}
+`;
