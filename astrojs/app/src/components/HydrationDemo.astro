@@ -1,0 +1,109 @@
+---
+import ReactTicker from "./ReactTicker.tsx";
+---
+
+<div class="hydration-demo">
+  <p class="intro">
+    Same <code>ReactTicker</code> component, four different hydration directives.
+    Open DevTools Network tab and reload — watch when JS chunks load.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="directive load">client:load</div>
+      <p class="desc">Hydrates immediately on page load. Highest priority. Use for above-the-fold interactive UI.</p>
+      <ReactTicker client:load label="client:load" accentColor="#4a4" />
+    </div>
+
+    <div class="card">
+      <div class="directive idle">client:idle</div>
+      <p class="desc">Hydrates after browser is idle (requestIdleCallback). Use for non-critical widgets.</p>
+      <ReactTicker client:idle label="client:idle" accentColor="#a84" />
+    </div>
+
+    <div class="card">
+      <div class="directive visible">client:visible</div>
+      <p class="desc">Hydrates when scrolled into viewport (IntersectionObserver). Best for below-fold.</p>
+      <ReactTicker client:visible label="client:visible" accentColor="#48a" />
+    </div>
+
+    <div class="card">
+      <div class="directive only">client:only="react"</div>
+      <p class="desc">Skips SSR entirely. No static HTML output. Use for browser-API-only components.</p>
+      <ReactTicker client:only="react" label='client:only="react"' accentColor="#a44" />
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Observe in DevTools:</strong>
+    <ul>
+      <li><code>client:load</code> → JS loads in initial bundle</li>
+      <li><code>client:idle</code> → JS loads after load event + idle</li>
+      <li><code>client:visible</code> → JS loads only when you scroll to it</li>
+      <li><code>client:only</code> → component missing from <code>view-source</code> (no SSR HTML)</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .hydration-demo {
+    font-family: system-ui, sans-serif;
+  }
+  .intro {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    background: #fafafa;
+  }
+  .directive {
+    display: inline-block;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    color: white;
+  }
+  .load   { background: #4a4; }
+  .idle   { background: #a84; }
+  .visible { background: #48a; }
+  .only   { background: #a44; }
+  .desc {
+    font-size: 12px;
+    color: #666;
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+  .note {
+    background: #f0f4ff;
+    border: 1px solid #c0ccff;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+  }
+  .note ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+  }
+  .note li {
+    margin-bottom: 4px;
+  }
+  code {
+    background: #e8e8f0;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+</style>

@@ -1,0 +1,142 @@
+---
+import StaticCounter from "../components/StaticCounter.astro";
+import ReactCounter from "../components/ReactCounter.tsx";
+import HydrationDemo from "../components/HydrationDemo.astro";
+import StaticList from "../components/StaticList.astro";
+import ReactList from "../components/ReactList.tsx";
+import ContentDemo from "../components/ContentDemo.astro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astro JS POC</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        background: #fff;
+        color: #111;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 22px;
+      }
+      .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin: 0 0 24px;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0;
+      }
+      .tab {
+        padding: 8px 18px;
+        border: 2px solid transparent;
+        border-bottom: none;
+        border-radius: 6px 6px 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        background: transparent;
+        position: relative;
+        bottom: -2px;
+        transition: all 0.15s;
+      }
+      .tab.active {
+        border-color: #eee;
+        border-bottom-color: #fff;
+        background: #fff;
+      }
+      .tab[data-tab="islands"] { color: #4a4; }
+      .tab[data-tab="islands"].active { border-color: #4a4; border-bottom-color: #fff; }
+      .tab[data-tab="hydration"] { color: #a84; }
+      .tab[data-tab="hydration"].active { border-color: #a84; border-bottom-color: #fff; }
+      .tab[data-tab="list"] { color: #e44; }
+      .tab[data-tab="list"].active { border-color: #e44; border-bottom-color: #fff; }
+      .tab[data-tab="content"] { color: #48a; }
+      .tab[data-tab="content"].active { border-color: #48a; border-bottom-color: #fff; }
+
+      .panel { display: none; }
+      .panel.active { display: block; }
+
+      .island-compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      .list-compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      @media (max-width: 700px) {
+        .island-compare, .list-compare { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Astro JS POC</h1>
+    <p class="subtitle">
+      Islands Architecture &mdash; Static HTML by default, React islands on demand
+    </p>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="islands">Islands</button>
+      <button class="tab" data-tab="hydration">Hydration</button>
+      <button class="tab" data-tab="list">List</button>
+      <button class="tab" data-tab="content">Content</button>
+    </div>
+
+    <!-- Islands Tab -->
+    <div class="panel active" data-panel="islands">
+      <div class="island-compare">
+        <StaticCounter />
+        <ReactCounter client:load />
+      </div>
+    </div>
+
+    <!-- Hydration Tab -->
+    <div class="panel" data-panel="hydration">
+      <HydrationDemo />
+    </div>
+
+    <!-- List Tab -->
+    <div class="panel" data-panel="list">
+      <div class="list-compare">
+        <StaticList />
+        <ReactList client:load />
+      </div>
+    </div>
+
+    <!-- Content Tab -->
+    <div class="panel" data-panel="content">
+      <ContentDemo />
+    </div>
+
+    <script>
+      const tabs = document.querySelectorAll<HTMLButtonElement>(".tab");
+      const panels = document.querySelectorAll<HTMLDivElement>(".panel");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.dataset.tab!;
+          tabs.forEach((t) => t.classList.remove("active"));
+          panels.forEach((p) => p.classList.remove("active"));
+          tab.classList.add("active");
+          document.querySelector(`[data-panel="${target}"]`)?.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

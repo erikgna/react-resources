@@ -1,0 +1,80 @@
+---
+// SSR-rendered list — pure HTML, zero client JS
+// Stress test impossible: no state, no event handlers, no requestAnimationFrame
+const count = 1000;
+const items = Array.from({ length: count }, (_, i) => ({ id: i, value: `Item ${i}` }));
+---
+
+<div>
+  <h3 class="title">Static Astro List (SSR)</h3>
+  <div class="controls">
+    <span class="info">Size: {count.toLocaleString()} items</span>
+    <span class="badge">Pure HTML — No stress test possible</span>
+  </div>
+  <p class="desc">
+    Rendered at build time (or request time in SSR mode). Ships as raw HTML — no JS hydration cost.
+    Cannot be stressed because there is no client state. Open <strong>view-source</strong> to see the full list in the HTML.
+  </p>
+  <div class="list-wrap">
+    <ul>
+      {items.map(item => (
+        <li class="item">{item.value}</li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .title {
+    margin: 0 0 12px;
+    color: #444;
+    font-family: system-ui, sans-serif;
+    font-size: 18px;
+  }
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: system-ui;
+  }
+  .info {
+    font-size: 13px;
+    color: #555;
+  }
+  .badge {
+    display: inline-block;
+    background: #888;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .desc {
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 12px;
+    line-height: 1.5;
+    font-family: system-ui;
+  }
+  .list-wrap {
+    overflow: auto;
+    max-height: 400px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  .item {
+    list-style: none;
+    padding: 2px 8px;
+    font-size: 13px;
+    font-family: system-ui;
+  }
+  .item:nth-child(even) {
+    background: #fafafa;
+  }
+</style>

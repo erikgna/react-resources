@@ -1,0 +1,87 @@
+---
+// Pure Astro component — renders to static HTML, zero client JS
+// Button clicks do nothing: no event handlers, no state
+const initialCount = 0;
+---
+
+<div class="counter-box static">
+  <h4>Static Astro Counter</h4>
+  <p class="badge">No JS — Dead HTML</p>
+  <div class="display" id="static-count">{initialCount}</div>
+  <div class="buttons">
+    <button disabled>-</button>
+    <button disabled>+</button>
+  </div>
+  <p class="note">
+    Astro components run at build time only. No event handlers, no state.
+    The buttons are disabled to make it obvious — but even if you removed
+    <code>disabled</code>, they still wouldn't work.
+  </p>
+</div>
+
+<style>
+  .counter-box {
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 320px;
+    font-family: system-ui, sans-serif;
+  }
+  .static {
+    border-color: #999;
+    background: #f5f5f5;
+  }
+  h4 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    color: #444;
+  }
+  .badge {
+    display: inline-block;
+    background: #999;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 0 0 16px;
+  }
+  .display {
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    padding: 16px;
+    background: #ddd;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    color: #888;
+  }
+  .buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  button {
+    font-size: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    border: 2px solid #bbb;
+    background: #e0e0e0;
+    color: #aaa;
+    cursor: not-allowed;
+  }
+  .note {
+    font-size: 12px;
+    color: #888;
+    margin: 0;
+    line-height: 1.5;
+  }
+  code {
+    background: #e0e0e0;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 11px;
+  }
+</style>
