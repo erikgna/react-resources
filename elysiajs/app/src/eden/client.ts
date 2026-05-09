@@ -3,13 +3,6 @@
  *
  * Run: bun src/eden/client.ts
  * Requires the server to be running: bun src/index.ts
- *
- * Eden reads the App type exported from index.ts and infers:
- *   - URL structure from route definitions
- *   - Request body/param/query shapes
- *   - Response types per route
- *
- * Zero runtime overhead — it's just a typed fetch wrapper.
  */
 
 import { treaty } from "@elysiajs/eden";
@@ -17,62 +10,123 @@ import type { App } from "../index";
 
 const api = treaty<App>("http://localhost:3000");
 
+async function section(title: string) {
+  console.log(`\n${"─".repeat(50)}`);
+  console.log(`  ${title}`);
+  console.log("─".repeat(50));
+}
+
 async function main() {
-  console.log("\n=== Eden Treaty POC ===\n");
+  console.log("\n=== Eden Treaty POC ===");
 
-  // Health check via plain fetch — Eden Treaty maps `/` to `api[""].get()`
-  // but root index routes are easier to verify outside Eden
-  const healthRaw = await fetch("http://localhost:3000/").then((r) => r.json());
-  console.log("Health:", healthRaw);
+  // ── Meta routes ──────────────────────────────────────
+  await section(".decorate() and .state()");
 
-  // --- List users (typed as User[]) ---
-  const { data: users, error: usersErr } = await api.users.get();
-  if (usersErr) throw usersErr;
-  console.log("\nUsers:", users);
+  const { data: uptime } = await api.uptime.get();
+  console.log("Uptime (decorate):", uptime);
 
-  // If you hover `users` in your editor, you'll see: User[] | null
-  // TypeScript knows the exact shape — no manual type annotation needed
+  const { data: stats } = await api.stats.get();
+  console.log("Stats before calls (state):", stats);
 
-  // --- Get single user (typed response: User or error object) ---
+  // ── Users (existing) ─────────────────────────────────
+  await section("Users — existing routes");
+
+  const { data: users } = await api.users.get();
+  console.log("Users:", users);
+
   const { data: user1 } = await api.users({ id: 1 }).get();
-  console.log("\nUser 1:", user1);
+  console.log("User 1:", user1);
 
-  // --- Create user without auth → expect 401 ---
-  const { data: noAuth, error: authErr } = await api.users.post({
-    name: "Bob",
-    email: "bob@example.com",
-  });
-  console.log("\nCreate without auth:", authErr?.status, authErr?.value ?? noAuth);
+  // ── Orders (macro API) ───────────────────────────────
+  await section("Orders — macro API (auth: true / auth: 'admin')");
 
-  // --- Create user with auth (token-admin) ---
-  const { data: created, error: createErr } = await api.users.post(
-    { name: "Bob", email: "bob@example.com", role: "user" },
-    { headers: { "x-token": "token-admin" } },
+  // Public list — no token needed
+  const { data: orders } = await api.orders.get();
+  console.log("Orders (public):", orders);
+
+  // Create without auth → 401 from macro, not guard
+  const { error: noAuthErr } = await api.orders.post({ item: "Trackpad", qty: 1 });
+  console.log("Create without auth:", noAuthErr?.status, noAuthErr?.value);
+
+  // Create with user token — macro: auth: true passes
+  const { data: newOrder, error: orderErr } = await api.orders.post(
+    { item: "Trackpad", qty: 1 },
+    { headers: { "x-token": "token-user", "x-request-id": "test-req-001" } },
   );
-  if (createErr) {
-    console.log("\nCreate error:", createErr.status, createErr.value);
+  if (orderErr) {
+    console.log("Create error:", orderErr.status, orderErr.value);
   } else {
-    console.log("\nCreated user:", created);
+    console.log("Created order:", newOrder);
   }
 
-  // --- Validation error: missing required email ---
+  // Delete with user token → 403 from macro: auth: "admin"
+  const { error: notAdminErr } = await api.orders({ id: 1 }).delete(undefined, {
+    headers: { "x-token": "token-user" },
+  });
+  console.log("Delete as user (expect 403):", notAdminErr?.status, notAdminErr?.value);
+
+  // Delete with admin token → 200
+  const { data: deleted } = await api.orders({ id: 1 }).delete(undefined, {
+    headers: { "x-token": "token-admin" },
+  });
+  console.log("Delete as admin:", deleted);
+
+  // ── Validation ───────────────────────────────────────
+  await section("Validation errors");
+
   const { error: validationErr } = await api.users.post(
-    // @ts-expect-error intentionally sending bad body to test validation
-    { name: "Bad User" },
+    // @ts-expect-error intentionally bad body
+    { name: "Bad" },
     { headers: { "x-token": "token-admin" } },
   );
-  console.log("\nValidation error (expected 422):", validationErr?.status, validationErr?.value);
+  console.log("Missing email (expect 422):", validationErr?.status);
 
-  // --- Products (public read) ---
+  const { error: negativeQty } = await api.orders.post(
+    // @ts-expect-error negative qty violates minimum: 1
+    { item: "Thing", qty: -1 },
+    { headers: { "x-token": "token-user" } },
+  );
+  console.log("Negative qty (expect 422):", negativeQty?.status);
+
+  // ── Products (existing) ──────────────────────────────
+  await section("Products — existing routes");
+
   const { data: products } = await api.products.get();
-  console.log("\nProducts:", products);
+  console.log("Products:", products);
 
-  // --- Create product with user token ---
   const { data: newProduct } = await api.products.post(
     { name: "Mouse", price: 49.99, stock: 100 },
     { headers: { "x-token": "token-user" } },
   );
-  console.log("\nNew product:", newProduct);
+  console.log("New product:", newProduct);
+
+  // ── SSE ──────────────────────────────────────────────
+  await section("SSE: generator streaming — fetching 3 events then closing");
+
+  // Eden Treaty doesn't have native SSE support; use fetch directly.
+  // Type safety is on the server side — the generator return type informs Swagger.
+  const sseRes = await fetch("http://localhost:3000/events/ticker");
+  const reader = sseRes.body!.getReader();
+  const decoder = new TextDecoder();
+  let ticksReceived = 0;
+
+  while (ticksReceived < 3) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    const text = decoder.decode(value).trim();
+    if (text) {
+      console.log("SSE chunk:", text);
+      ticksReceived++;
+    }
+  }
+  await reader.cancel();
+  console.log("(cancelled after 3 ticks)");
+
+  // ── Final stats ──────────────────────────────────────
+  await section("Final state check");
+
+  const { data: finalStats } = await api.stats.get();
+  console.log("Stats after all calls:", finalStats);
 
   console.log("\n=== Done ===\n");
 }

@@ -69,9 +69,48 @@ No `any`. No casting. The server type IS the client type.
 ## What This POC Exercises
 
 1. **Schema validation** — TypeBox shapes on body/params/query, invalid input behavior
-2. **Plugin architecture** — `derive()` for auth context injection
+2. **Plugin architecture** — `derive()` for auth context injection, named plugin deduplication
 3. **Lifecycle hooks** — `onRequest`, `beforeHandle`, `afterHandle`, `onError`
-4. **Guards** — scoped auth without URL prefix
-5. **Route groups** — `.group('/users')`, `.group('/products')`
-6. **Eden Treaty** — type-safe client with inferred response types
-7. **WebSocket** — chat endpoint with `open`/`message`/`close` handlers
+4. **Guards** — scoped auth without URL prefix (`/routes/users.ts`, `/routes/products.ts`)
+5. **Macro API** — `src/plugins/macros.ts` + `src/routes/orders.ts`; route-level metadata compiles to hooks
+6. **`derive()` vs `resolve()`** — transform phase vs beforeHandle phase; `resolve()` sees validated body
+7. **`.state()`** — mutable app-level store; live request counter at `GET /stats`
+8. **`.decorate()`** — immutable startup constants; server start time at `GET /uptime`
+9. **SSE streaming** — async generator function at `GET /events/ticker`
+10. **Route groups** — `.group('/users')`, `.group('/products')`, `.group('/orders')`
+11. **Eden Treaty** — type-safe client with inferred response types
+12. **WebSocket** — chat endpoint with `open`/`message`/`close` handlers
+
+## Macro API vs Guard
+
+Guard (old pattern in this POC):
+```ts
+.guard({ beforeHandle: [requireAuth] }, (app) =>
+  app.post('/', handler, { body: CreateSchema })
+)
+```
+
+Macro (new pattern, `src/routes/orders.ts`):
+```ts
+.post('/', handler, { body: CreateSchema, auth: true })
+.delete('/:id', handler, { auth: "admin" })
+```
+
+Macros compile to the same lifecycle hooks — zero runtime difference. The improvement is authorship ergonomics and colocation: auth intent is declared at the route, not wrapped around it.
+
+## `derive()` vs `resolve()`
+
+| | `derive()` | `resolve()` |
+|---|---|---|
+| Phase | Transform | BeforeHandle |
+| Sees validated body | No | Yes |
+| Can abort request | No | Yes (return early) |
+| Use for | Cheap context injection (auth token decode) | Async lookups needing valid input |
+
+## `.state()` vs `.decorate()`
+
+| | `.state()` | `.decorate()` |
+|---|---|---|
+| Mutable | Yes | No |
+| Scope | App-wide shared | App-wide read-only |
+| Use for | Counters, caches, in-flight tracking | DB clients, logger, config constants |

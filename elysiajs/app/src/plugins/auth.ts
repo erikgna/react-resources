@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 
-type AuthUser = {
+export type AuthUser = {
   id: number;
   name: string;
   role: "admin" | "user";

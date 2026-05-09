@@ -37,7 +37,8 @@ export const userRoutes = new Elysia({ prefix: "/users" })
   })
 
   // Protected: create user (any authenticated user)
-  .guard({ beforeHandle: [requireAuth] }, (app) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Elysia 1.x guard doesn't propagate derived context to beforeHandle type
+  .guard({ beforeHandle: [requireAuth as any] }, (app) =>
     app
       .post("/", ({ body, user }) => {
         const created: User = {
@@ -80,7 +81,7 @@ export const userRoutes = new Elysia({ prefix: "/users" })
         const [removed] = users.splice(idx, 1);
         return { deleted: removed };
       }, {
-        beforeHandle: [requireAdmin],
+        beforeHandle: [requireAdmin as any],
         params: t.Object({ id: t.Numeric() }),
         detail: { summary: "Delete user (admin only)", tags: ["users"] },
       }),

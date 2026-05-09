@@ -39,28 +39,75 @@ React `.tsx` islands:
 - Each island is isolated — no shared React tree
 - Larger JS payload per island
 
-## What this POC explores
+## What this POC covers
 
-1. **Islands tab** — Static Astro counter (broken/dead) vs React island counter (interactive)
-2. **Hydration tab** — Same component with `client:load`, `client:idle`, `client:visible` side by side
-3. **List tab** — SSR static list vs React island list with stress test (same as milionjs ReactList)
-4. **Content tab** — Type-safe content collections (markdown → typed schema)
+1. **Islands tab** — Static Astro counter (dead HTML) vs React island counter (interactive)
+2. **Hydration tab** — Same component with `client:load`, `client:idle`, `client:visible`, `client:only` side by side
+3. **List tab** — SSR static list vs React island list with stress test
+4. **Content tab** — Type-safe content collections (markdown → typed schema, validated at build time)
+5. **Slots tab** — Named + default slots in `.astro` components with fallback content; `Astro.slots.has()`
+6. **Stores tab** — nanostores `atom` + `computed` shared across two isolated React islands (cross-island state)
+7. **Routing tab** — File-based routing, dynamic `[slug]` routes via `getStaticPaths`, API routes, View Transitions
 
-## Key insights
+## File-based Routing
 
-Static > Islands: Prefer static Astro components unless you actually need interactivity.
-Directive matters: `client:visible` can cut initial JS budget significantly for below-fold content.
-Islands are isolated: React islands don't share state — no global React context across islands.
-SSR list is fast: Static `<ul>` renders instantly, no hydration cost. But you can't stress-test it.
+```
+src/pages/
+  index.astro          →  /
+  about.astro          →  /about
+  posts/[slug].astro   →  /posts/:slug  (getStaticPaths)
+  api/posts.json.ts    →  /api/posts.json  (static JSON at build time)
+```
+
+Dynamic routes call `getStaticPaths()` to enumerate all valid params at build time.
+API routes (`*.ts` files) in static mode are pre-rendered as static files.
+
+## View Transitions
+
+Add `<ViewTransitions />` from `astro:transitions` to any page's `<head>`.
+Astro intercepts navigation, animates shared elements with matching `transition:name` attributes.
+No JS bundle change — uses the browser View Transitions API with Astro's polyfill.
+
+## Cross-Island State (nanostores)
+
+Islands are isolated by design. To share state across islands:
+- Use `nanostores` atoms — framework-agnostic pub/sub
+- `atom(0)` — writable atom
+- `computed($atom, fn)` — derived read-only value
+- `useStore($atom)` — React hook from `@nanostores/react`
+
+No global React context, no prop drilling, no full SPA required.
+
+## Slots
+
+Astro `.astro` components can define:
+- `<slot />` — default slot (unnamed)
+- `<slot name="header" />` — named slot
+- Fallback content inside `<slot>fallback</slot>`
+- `Astro.slots.has("name")` — check if slot was provided before rendering its wrapper
+
+Zero JS. Entire composition resolves at build time.
+
+## Key Insights
+
+- **Static > Islands**: Prefer static Astro components unless you actually need interactivity.
+- **Directive matters**: `client:visible` cuts initial JS budget for below-fold content.
+- **Islands are isolated**: React islands don't share state — cross-island needs a store.
+- **SSR list is fast**: Static `<ul>` renders instantly, no hydration cost.
+- **API routes are static**: In `output: "static"` mode, API routes generate pre-rendered files.
+- **Slots are zero-cost**: Unlike React children, slots resolve at build time with no JS.
 
 ## Pros
 - Near-zero JS by default
 - Bring your own framework (React, Vue, Svelte, Solid all on one page)
 - Content collections give type-safe markdown at build time
-- Excellent for content-heavy sites, blogs, docs, marketing
+- File-based routing with dynamic routes and API routes
+- View Transitions for SPA-like navigation without a full SPA
+- Slots for build-time composition
 
 ## Cons
 - Islands don't share state — cross-island communication needs a store (nanostores)
-- `client:only` skips SSR entirely — breaks SEO for those components  
+- `client:only` skips SSR entirely — breaks SEO for those components
 - Not ideal for highly interactive SPAs (use Next.js / Remix instead)
 - Learning curve around when to use `.astro` vs `.tsx`
+- View Transitions limited to browsers supporting the API (+ Astro polyfill)

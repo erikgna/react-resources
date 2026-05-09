@@ -1,10 +1,14 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import StaticCounter from "../components/StaticCounter.astro";
 import ReactCounter from "../components/ReactCounter.tsx";
 import HydrationDemo from "../components/HydrationDemo.astro";
 import StaticList from "../components/StaticList.astro";
 import ReactList from "../components/ReactList.tsx";
 import ContentDemo from "../components/ContentDemo.astro";
+import SlotsDemo from "../components/SlotsDemo.astro";
+import StoresDemo from "../components/StoresDemo.astro";
+import RoutingDemo from "../components/RoutingDemo.astro";
 ---
 
 <!doctype html>
@@ -13,6 +17,7 @@ import ContentDemo from "../components/ContentDemo.astro";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Astro JS POC</title>
+    <ViewTransitions />
     <style>
       * { box-sizing: border-box; }
       body {
@@ -33,19 +38,20 @@ import ContentDemo from "../components/ContentDemo.astro";
       }
       .tabs {
         display: flex;
-        gap: 8px;
+        gap: 6px;
         margin-bottom: 24px;
         border-bottom: 2px solid #eee;
         padding-bottom: 0;
+        flex-wrap: wrap;
       }
       .tab {
-        padding: 8px 18px;
+        padding: 7px 14px;
         border: 2px solid transparent;
         border-bottom: none;
         border-radius: 6px 6px 0 0;
         cursor: pointer;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
         background: transparent;
         position: relative;
         bottom: -2px;
@@ -56,24 +62,25 @@ import ContentDemo from "../components/ContentDemo.astro";
         border-bottom-color: #fff;
         background: #fff;
       }
-      .tab[data-tab="islands"] { color: #4a4; }
-      .tab[data-tab="islands"].active { border-color: #4a4; border-bottom-color: #fff; }
+      .tab[data-tab="islands"]   { color: #4a4; }
+      .tab[data-tab="islands"].active   { border-color: #4a4;  border-bottom-color: #fff; }
       .tab[data-tab="hydration"] { color: #a84; }
-      .tab[data-tab="hydration"].active { border-color: #a84; border-bottom-color: #fff; }
-      .tab[data-tab="list"] { color: #e44; }
-      .tab[data-tab="list"].active { border-color: #e44; border-bottom-color: #fff; }
-      .tab[data-tab="content"] { color: #48a; }
-      .tab[data-tab="content"].active { border-color: #48a; border-bottom-color: #fff; }
+      .tab[data-tab="hydration"].active { border-color: #a84;  border-bottom-color: #fff; }
+      .tab[data-tab="list"]      { color: #e44; }
+      .tab[data-tab="list"].active      { border-color: #e44;  border-bottom-color: #fff; }
+      .tab[data-tab="content"]   { color: #48a; }
+      .tab[data-tab="content"].active   { border-color: #48a;  border-bottom-color: #fff; }
+      .tab[data-tab="slots"]     { color: #9a4; }
+      .tab[data-tab="slots"].active     { border-color: #9a4;  border-bottom-color: #fff; }
+      .tab[data-tab="stores"]    { color: #94a; }
+      .tab[data-tab="stores"].active    { border-color: #94a;  border-bottom-color: #fff; }
+      .tab[data-tab="routing"]   { color: #4ab; }
+      .tab[data-tab="routing"].active   { border-color: #4ab;  border-bottom-color: #fff; }
 
       .panel { display: none; }
       .panel.active { display: block; }
 
-      .island-compare {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        align-items: start;
-      }
+      .island-compare,
       .list-compare {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -86,7 +93,7 @@ import ContentDemo from "../components/ContentDemo.astro";
     </style>
   </head>
   <body>
-    <h1>Astro JS POC</h1>
+    <h1 transition:name="about-title">Astro JS POC</h1>
     <p class="subtitle">
       Islands Architecture &mdash; Static HTML by default, React islands on demand
     </p>
@@ -96,6 +103,9 @@ import ContentDemo from "../components/ContentDemo.astro";
       <button class="tab" data-tab="hydration">Hydration</button>
       <button class="tab" data-tab="list">List</button>
       <button class="tab" data-tab="content">Content</button>
+      <button class="tab" data-tab="slots">Slots</button>
+      <button class="tab" data-tab="stores">Stores</button>
+      <button class="tab" data-tab="routing">Routing</button>
     </div>
 
     <!-- Islands Tab -->
@@ -122,6 +132,21 @@ import ContentDemo from "../components/ContentDemo.astro";
     <!-- Content Tab -->
     <div class="panel" data-panel="content">
       <ContentDemo />
+    </div>
+
+    <!-- Slots Tab -->
+    <div class="panel" data-panel="slots">
+      <SlotsDemo />
+    </div>
+
+    <!-- Stores Tab -->
+    <div class="panel" data-panel="stores">
+      <StoresDemo />
+    </div>
+
+    <!-- Routing Tab -->
+    <div class="panel" data-panel="routing">
+      <RoutingDemo />
     </div>
 
     <script>

@@ -1,0 +1,130 @@
+---
+import StoreIslandA from "./StoreIslandA.tsx";
+import StoreIslandB from "./StoreIslandB.tsx";
+---
+
+<div class="stores-demo">
+  <p class="intro">
+    Two separate React islands sharing state via <strong>nanostores</strong>. Each island is an independent
+    React root — no shared context, no prop drilling. The store is the bridge.
+  </p>
+
+  <div class="layout">
+    <StoreIslandA client:load />
+
+    <div class="store-node">
+      <div class="store-title">nanostores</div>
+      <div class="store-atoms">
+        <div class="atom">
+          <code>$count</code>
+          <span class="atom-type">atom</span>
+        </div>
+        <div class="atom">
+          <code>$doubled</code>
+          <span class="atom-type">computed</span>
+        </div>
+        <div class="atom">
+          <code>$label</code>
+          <span class="atom-type">computed</span>
+        </div>
+      </div>
+      <div class="arrows">
+        <span>Island A ↔ store ↔ Island B</span>
+      </div>
+    </div>
+
+    <StoreIslandB client:load />
+  </div>
+
+  <div class="code-preview">
+    <strong>src/stores/shared.ts</strong>
+    <pre><code>{`import { atom, computed } from "nanostores";
+
+export const $count   = atom(0);
+export const $doubled = computed($count, (n) => n * 2);`}</code></pre>
+  </div>
+
+  <div class="note">
+    <strong>Key insight:</strong> Islands are hydrated independently. Astro serializes no shared React state
+    between them. nanostores (or any pub/sub store) is the only way to sync islands without a full SPA.
+  </div>
+</div>
+
+<style>
+  .stores-demo { font-family: system-ui, sans-serif; }
+  .intro { color: #555; font-size: 14px; margin-bottom: 24px; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .store-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    border: 2px dashed #bbb;
+    border-radius: 12px;
+    background: #fafafa;
+    min-width: 160px;
+  }
+  .store-title {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+  }
+  .store-atoms { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .atom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 4px 8px;
+  }
+  .atom code { font-size: 12px; color: #333; }
+  .atom-type {
+    font-size: 10px;
+    color: #888;
+    background: #e0e0e0;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .arrows { font-size: 11px; color: #aaa; text-align: center; }
+
+  .code-preview {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+  .code-preview strong {
+    display: block;
+    color: #89b4fa;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  pre { margin: 0; overflow-x: auto; }
+  code { font-family: "Fira Code", monospace; font-size: 12px; line-height: 1.6; }
+
+  .note {
+    background: #f0f4ff;
+    border: 1px solid #c0ccff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+</style>

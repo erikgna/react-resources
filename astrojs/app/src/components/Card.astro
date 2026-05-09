@@ -1,0 +1,72 @@
+---
+interface Props {
+  accent?: string;
+  title?: string;
+}
+const { accent = "#4a4", title } = Astro.props;
+---
+
+<div class="card" style={`--accent: ${accent}`}>
+  {
+    Astro.slots.has("header") ? (
+      <div class="card-header">
+        <slot name="header" />
+      </div>
+    ) : title ? (
+      <div class="card-header card-header-default">{title}</div>
+    ) : null
+  }
+
+  <div class="card-body">
+    <slot>
+      <span class="fallback">No default slot content provided</span>
+    </slot>
+  </div>
+
+  <div class="card-footer">
+    <slot name="footer">
+      <span class="fallback-footer">Default footer fallback</span>
+    </slot>
+  </div>
+</div>
+
+<style>
+  .card {
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+  }
+  .card-header {
+    background: var(--accent);
+    color: white;
+    padding: 10px 14px;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .card-header-default {
+    opacity: 0.85;
+  }
+  .card-body {
+    padding: 14px;
+    background: #fafafa;
+    min-height: 48px;
+  }
+  .card-footer {
+    padding: 8px 14px;
+    background: #f0f0f0;
+    font-size: 12px;
+    color: #555;
+    border-top: 1px solid #e0e0e0;
+  }
+  .fallback {
+    color: #bbb;
+    font-style: italic;
+    font-size: 12px;
+  }
+  .fallback-footer {
+    color: #aaa;
+    font-style: italic;
+  }
+</style>

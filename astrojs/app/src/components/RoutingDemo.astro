@@ -1,0 +1,157 @@
+---
+import { getCollection } from "astro:content";
+import ApiFetcher from "./ApiFetcher.tsx";
+
+const posts = await getCollection("posts", ({ data }) => !data.draft);
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<div class="routing-demo">
+  <p class="intro">
+    Astro uses filesystem-based routing. Every <code>.astro</code> or <code>.ts</code> file in
+    <code>src/pages/</code> becomes a route. Dynamic segments use <code>[param]</code> syntax.
+  </p>
+
+  <div class="two-col">
+    <!-- Left: route tree + links -->
+    <div>
+      <h4>Route tree</h4>
+      <pre class="tree"><code>{`src/pages/
+  index.astro          →  /
+  about.astro          →  /about
+  posts/
+    [slug].astro       →  /posts/:slug
+  api/
+    posts.json.ts      →  /api/posts.json`}</code></pre>
+
+      <h4>Static pages</h4>
+      <div class="link-list">
+        <a href="/" class="route-link">
+          <code>/</code>
+          <span>index.astro (this page)</span>
+        </a>
+        <a href="/about" class="route-link">
+          <code>/about</code>
+          <span>about.astro — View Transitions demo</span>
+        </a>
+        <a href="/api/posts.json" target="_blank" class="route-link api">
+          <code>/api/posts.json</code>
+          <span>API route — pre-rendered JSON ↗</span>
+        </a>
+      </div>
+
+      <h4>Dynamic routes (getStaticPaths)</h4>
+      <div class="link-list">
+        {posts.map((p) => (
+          <a href={`/posts/${p.slug}`} class="route-link dynamic">
+            <code>/posts/{p.slug}</code>
+            <span transition:name={`post-title-${p.slug}`}>{p.data.title}</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="code-block">
+        <strong>[slug].astro — getStaticPaths</strong>
+        <pre><code>{`export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}`}</code></pre>
+      </div>
+    </div>
+
+    <!-- Right: live API fetch -->
+    <div>
+      <h4>API Route — live fetch</h4>
+      <p class="sub">React island client-fetches the pre-rendered JSON endpoint.</p>
+      <ApiFetcher client:load />
+
+      <div class="vt-box">
+        <strong>View Transitions</strong>
+        <p>
+          Both <code>index.astro</code> and target pages include <code>{"<ViewTransitions />"}</code>.
+          Click any post link above — Astro intercepts navigation and animates shared elements
+          (elements with matching <code>transition:name</code>).
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .routing-demo { font-family: system-ui, sans-serif; }
+  .intro { color: #555; font-size: 14px; margin-bottom: 24px; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  h4 { margin: 0 0 10px; font-size: 14px; color: #333; }
+  .sub { font-size: 13px; color: #777; margin: 0 0 12px; }
+
+  .tree {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 0 0 20px;
+    overflow-x: auto;
+  }
+  .tree code { background: none; padding: 0; font-size: 12px; line-height: 1.8; color: inherit; }
+
+  .link-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+  .route-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 7px;
+    text-decoration: none;
+    background: #fafafa;
+    transition: border-color 0.15s;
+  }
+  .route-link:hover { border-color: #4ab; }
+  .route-link code { background: none; padding: 0; color: #333; font-size: 13px; }
+  .route-link span { font-size: 11px; color: #888; }
+  .route-link.api code { color: #4ab; }
+  .route-link.dynamic code { color: #9a4; }
+
+  .code-block {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 13px;
+  }
+  .code-block strong {
+    display: block;
+    color: #89b4fa;
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+  .code-block pre { margin: 0; overflow-x: auto; }
+  .code-block code { background: none; padding: 0; font-size: 12px; line-height: 1.6; color: inherit; font-family: "Fira Code", monospace; }
+
+  .vt-box {
+    margin-top: 16px;
+    background: #f0f9ff;
+    border: 1px solid #bae0fd;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .vt-box strong { display: block; margin-bottom: 6px; color: #0369a1; }
+  .vt-box p { margin: 0; color: #555; }
+  .vt-box code { background: #e0f0ff; }
+</style>

@@ -1,0 +1,112 @@
+---
+import { ViewTransitions } from "astro:transitions";
+
+const buildTime = new Date().toISOString();
+const env = import.meta.env.MODE;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — Astro POC</title>
+    <ViewTransitions />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 32px 24px;
+        font-family: system-ui, sans-serif;
+        background: #fff;
+        color: #111;
+        max-width: 680px;
+        margin-inline: auto;
+      }
+      .back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #4ab;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 32px;
+      }
+      .back:hover { text-decoration: underline; }
+      h1 { font-size: 28px; margin: 0 0 8px; }
+      .subtitle { color: #888; font-size: 14px; margin: 0 0 32px; }
+      .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 16px;
+        background: #fafafa;
+      }
+      .card h3 { margin: 0 0 10px; font-size: 15px; }
+      .kv { display: flex; gap: 12px; align-items: baseline; margin-bottom: 6px; }
+      .k { font-size: 12px; color: #888; min-width: 120px; font-family: monospace; }
+      .v { font-size: 14px; font-family: monospace; color: #333; }
+      .route-note {
+        background: #f0f9ff;
+        border: 1px solid #bae0fd;
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-size: 13px;
+        line-height: 1.6;
+        margin-top: 24px;
+      }
+      code {
+        background: #f0f0f0;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/" class="back" transition:name="nav-back">← Back to POC</a>
+
+    <h1 transition:name="about-title">About This POC</h1>
+    <p class="subtitle">Static page demonstrating file-based routing + ViewTransitions</p>
+
+    <div class="card">
+      <h3>Runtime Info (baked at build time)</h3>
+      <div class="kv">
+        <span class="k">Astro.url.pathname</span>
+        <span class="v">{Astro.url.pathname}</span>
+      </div>
+      <div class="kv">
+        <span class="k">import.meta.env.MODE</span>
+        <span class="v">{env}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Build time</span>
+        <span class="v">{buildTime}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>File-based Routing</h3>
+      <div class="kv">
+        <span class="k">This file</span>
+        <span class="v">src/pages/about.astro</span>
+      </div>
+      <div class="kv">
+        <span class="k">Output URL</span>
+        <span class="v">/about</span>
+      </div>
+      <div class="kv">
+        <span class="k">Rendered</span>
+        <span class="v">static HTML at build time</span>
+      </div>
+    </div>
+
+    <div class="route-note">
+      <strong>View Transitions:</strong> Added <code>{"<ViewTransitions />"}</code> to both this page and
+      <code>index.astro</code>. Astro intercepts navigation and animates shared elements.
+      Elements with matching <code>transition:name</code> morph between pages.
+    </div>
+  </body>
+</html>

@@ -47,7 +47,8 @@ export const productRoutes = new Elysia({ prefix: "/products" })
   })
 
   // Protected CRUD via guard — requireAuth runs before all handlers inside
-  .guard({ beforeHandle: [requireAuth] }, (app) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Elysia 1.x guard doesn't propagate derived context to beforeHandle type
+  .guard({ beforeHandle: [requireAuth as any] }, (app) =>
     app
       .post("/", ({ body }) => {
         const created: Product = {
