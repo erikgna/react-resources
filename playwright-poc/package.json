@@ -1,0 +1,26 @@
+{
+  "name": "playwright-ct-poc",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test-ct": "playwright test -c playwright-ct.config.ts",
+    "test-ct:ui": "playwright test -c playwright-ct.config.ts --ui",
+    "test-ct:debug": "playwright test -c playwright-ct.config.ts --debug",
+    "install-browsers": "playwright install chromium"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/experimental-ct-react": "^1.45.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.0"
+  }
+}

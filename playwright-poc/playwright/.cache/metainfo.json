@@ -1,0 +1,265 @@
+{
+  "version": "1.59.1",
+  "viteVersion": "6.4.2",
+  "registerSourceHash": "ea233d95b980072c81eb49458aee55f5d33fdb02",
+  "components": [
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_01_locators_LocatorsExperiment_GreetingCard",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/01-locators/locators.spec.tsx",
+      "importSource": "./LocatorsExperiment",
+      "remoteName": "GreetingCard"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_01_locators_LocatorsExperiment_UserList",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/01-locators/locators.spec.tsx",
+      "importSource": "./LocatorsExperiment",
+      "remoteName": "UserList"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_01_locators_LocatorsExperiment_ProductList",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/01-locators/locators.spec.tsx",
+      "importSource": "./LocatorsExperiment",
+      "remoteName": "ProductList"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_02_actions_ActionsExperiment_Counter",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/02-actions/actions.spec.tsx",
+      "importSource": "./ActionsExperiment",
+      "remoteName": "Counter"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_02_actions_ActionsExperiment_TextForm",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/02-actions/actions.spec.tsx",
+      "importSource": "./ActionsExperiment",
+      "remoteName": "TextForm"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_02_actions_ActionsExperiment_SelectForm",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/02-actions/actions.spec.tsx",
+      "importSource": "./ActionsExperiment",
+      "remoteName": "SelectForm"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_02_actions_ActionsExperiment_HoverCard",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/02-actions/actions.spec.tsx",
+      "importSource": "./ActionsExperiment",
+      "remoteName": "HoverCard"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_03_assertions_AssertionsExperiment_ToggleBox",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/assertions.spec.tsx",
+      "importSource": "./AssertionsExperiment",
+      "remoteName": "ToggleBox"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_03_assertions_AssertionsExperiment_DisabledField",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/assertions.spec.tsx",
+      "importSource": "./AssertionsExperiment",
+      "remoteName": "DisabledField"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_03_assertions_AssertionsExperiment_CheckboxGroup",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/assertions.spec.tsx",
+      "importSource": "./AssertionsExperiment",
+      "remoteName": "CheckboxGroup"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_03_assertions_AssertionsExperiment_ColorBox",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/assertions.spec.tsx",
+      "importSource": "./AssertionsExperiment",
+      "remoteName": "ColorBox"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_03_assertions_AssertionsExperiment_FocusTarget",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/assertions.spec.tsx",
+      "importSource": "./AssertionsExperiment",
+      "remoteName": "FocusTarget"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_04_async_AsyncExperiment_DelayedContent",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/04-async/async.spec.tsx",
+      "importSource": "./AsyncExperiment",
+      "remoteName": "DelayedContent"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_04_async_AsyncExperiment_SearchDebounce",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/04-async/async.spec.tsx",
+      "importSource": "./AsyncExperiment",
+      "remoteName": "SearchDebounce"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_04_async_AsyncExperiment_StepLoader",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/04-async/async.spec.tsx",
+      "importSource": "./AsyncExperiment",
+      "remoteName": "StepLoader"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_05_network_NetworkExperiment_UserFeed",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/05-network/network.spec.tsx",
+      "importSource": "./NetworkExperiment",
+      "remoteName": "UserFeed"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_05_network_NetworkExperiment_PostForm",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/05-network/network.spec.tsx",
+      "importSource": "./NetworkExperiment",
+      "remoteName": "PostForm"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_06_page_objects_PageObjectsExperiment_LoginForm",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/06-page-objects/page-objects.spec.tsx",
+      "importSource": "./PageObjectsExperiment",
+      "remoteName": "LoginForm"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_06_page_objects_PageObjectsExperiment_TodoList",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/06-page-objects/page-objects.spec.tsx",
+      "importSource": "./PageObjectsExperiment",
+      "remoteName": "TodoList"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_07_accessibility_AccessibilityExperiment_AccessibleForm",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/07-accessibility/accessibility.spec.tsx",
+      "importSource": "./AccessibilityExperiment",
+      "remoteName": "AccessibleForm"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_07_accessibility_AccessibilityExperiment_FocusTrap",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/07-accessibility/accessibility.spec.tsx",
+      "importSource": "./AccessibilityExperiment",
+      "remoteName": "FocusTrap"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_07_accessibility_AccessibilityExperiment_LiveRegion",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/07-accessibility/accessibility.spec.tsx",
+      "importSource": "./AccessibilityExperiment",
+      "remoteName": "LiveRegion"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_08_failures_FailuresExperiment_TwoButtons",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/08-failures/failures.spec.tsx",
+      "importSource": "./FailuresExperiment",
+      "remoteName": "TwoButtons"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_08_failures_FailuresExperiment_SlowAppear",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/08-failures/failures.spec.tsx",
+      "importSource": "./FailuresExperiment",
+      "remoteName": "SlowAppear"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_08_failures_FailuresExperiment_DisabledButton",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/08-failures/failures.spec.tsx",
+      "importSource": "./FailuresExperiment",
+      "remoteName": "DisabledButton"
+    },
+    {
+      "id": "_Users_erik_Documents_pocs_react_resources_playwright_poc_src_experiments_08_failures_FailuresExperiment_HiddenTarget",
+      "filename": "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/08-failures/failures.spec.tsx",
+      "importSource": "./FailuresExperiment",
+      "remoteName": "HiddenTarget"
+    }
+  ],
+  "sources": {
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/playwright/index.html": {
+      "timestamp": 1778278976692.4932
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/playwright/index.tsx": {
+      "timestamp": 1778278498166.7625
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/index.css": {
+      "timestamp": 1778278501454.4941
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react/index.js": {
+      "timestamp": 1778278943579.6023
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react-dom/client.js": {
+      "timestamp": 1778278943576.1753
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/01-locators/LocatorsExperiment.tsx": {
+      "timestamp": 1778278557765.0664
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/08-failures/FailuresExperiment.tsx": {
+      "timestamp": 1778279515430.8804
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/07-accessibility/AccessibilityExperiment.tsx": {
+      "timestamp": 1778279495025.4236
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/06-page-objects/PageObjectsExperiment.tsx": {
+      "timestamp": 1778279493799.4387
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/05-network/NetworkExperiment.tsx": {
+      "timestamp": 1778279499576.0828
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/04-async/AsyncExperiment.tsx": {
+      "timestamp": 1778278690916.9636
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/02-actions/ActionsExperiment.tsx": {
+      "timestamp": 1778278603804.2817
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/AssertionsExperiment.tsx": {
+      "timestamp": 1778278647783.5112
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react/cjs/react.production.js": {
+      "timestamp": 1778278943624.8574
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react-dom/cjs/react-dom-client.production.js": {
+      "timestamp": 1778278943635.8628
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react/jsx-runtime.js": {
+      "timestamp": 1778278943586.6362
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx": {
+      "timestamp": 1778278524177.4478
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/scheduler/index.js": {
+      "timestamp": 1778278943573.693
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react-dom/index.js": {
+      "timestamp": 1778278943582.376
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react/cjs/react-jsx-runtime.production.js": {
+      "timestamp": 1778278943615.7563
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/react-dom/cjs/react-dom.production.js": {
+      "timestamp": 1778278943703.2073
+    },
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/node_modules/scheduler/cjs/scheduler.production.js": {
+      "timestamp": 1778278943612.3804
+    }
+  },
+  "deps": {
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/01-locators/LocatorsExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/01-locators/LocatorsExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ],
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/02-actions/ActionsExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/02-actions/ActionsExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ],
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/AssertionsExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/03-assertions/AssertionsExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ],
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/04-async/AsyncExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/04-async/AsyncExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ],
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/05-network/NetworkExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/05-network/NetworkExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ],
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/06-page-objects/PageObjectsExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/06-page-objects/PageObjectsExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ],
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/07-accessibility/AccessibilityExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/07-accessibility/AccessibilityExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ],
+    "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/08-failures/FailuresExperiment.tsx": [
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/08-failures/FailuresExperiment.tsx",
+      "/Users/erik/Documents/pocs/react-resources/playwright-poc/src/experiments/shared.tsx"
+    ]
+  }
+}
