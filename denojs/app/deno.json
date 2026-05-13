@@ -1,0 +1,18 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-all --unstable-kv main.ts",
+    "start": "deno run --allow-all --unstable-kv main.ts",
+    "test": "deno test --allow-all --unstable-kv src/__tests__/",
+    "bench": "deno bench --allow-all --unstable-kv src/__tests__/bench.ts",
+    "compile": "deno compile --allow-all --unstable-kv -o denojs-poc main.ts",
+    "fmt": "deno fmt",
+    "lint": "deno lint"
+  },
+  "unstable": ["kv"],
+  "imports": {
+    "@db/sqlite": "jsr:@db/sqlite@^0.12",
+    "@std/assert": "jsr:@std/assert@^1.0",
+    "@std/path": "jsr:@std/path@^1.0",
+    "@std/encoding": "jsr:@std/encoding@^1.0"
+  }
+}
