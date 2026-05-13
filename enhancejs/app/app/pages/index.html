@@ -1,0 +1,29 @@
+<style scope="global">
+  .ssr-proof {
+    background: #1f2937;
+    color: #34d399;
+    font-family: monospace;
+    font-size: 12px;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="poc-wrap">
+  <app-nav active="/"></app-nav>
+
+  <h1>Enhance JS POC</h1>
+  <p class="subtitle">HTML-first. SSR web components. No VDOM. No virtual lifecycle.</p>
+
+  <div class="ssr-proof">
+    ⌘U to view source — &lt;my-card&gt; tags are gone. Server expanded them to real HTML.
+  </div>
+
+  <p class="section-label">Custom Elements — server-side rendered</p>
+
+  <my-card title="Alpha Component" body="Server renders this to plain HTML. No JS needed for initial paint. No hydration delay." type="info"></my-card>
+  <my-card title="Beta Component" body="Enhance resolves nested custom elements recursively during SSR. my-card renders my-badge inline." type="success"></my-card>
+  <my-card title="Gamma Component" body="Each element is a pure function: (state) => HTML string. No class, no lifecycle, no runtime." type="warning"></my-card>
+  <my-card title="Delta Component" body="Styles inside elements are scoped automatically. No CSS-in-JS, no CSS Modules needed." type="error"></my-card>
+</div>

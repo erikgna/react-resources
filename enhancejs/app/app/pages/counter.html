@@ -1,0 +1,35 @@
+<style scope="global">
+  .explain {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    color: #4b5563;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+  .explain strong { color: #111827; }
+  .explain code {
+    font-family: monospace;
+    background: #f3f4f6;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+</style>
+
+<div class="poc-wrap">
+  <app-nav active="/counter"></app-nav>
+
+  <h1>Progressive Enhancement</h1>
+  <p class="subtitle">Works with JS disabled. JS upgrades to no-reload behavior.</p>
+
+  <div class="explain">
+    <strong>No JS:</strong> Form POST to <code>/counter</code> → server increments → redirect back (PRG pattern).<br>
+    <strong>With JS:</strong> Submit intercepted → <code>fetch</code> POST with <code>Accept: application/json</code> → DOM updated in-place. No reload.<br>
+    Same element. Same form. No conditional code branches in the HTML.
+  </div>
+
+  <my-counter></my-counter>
+</div>

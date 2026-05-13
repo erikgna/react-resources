@@ -1,0 +1,87 @@
+<style scope="global">
+  .lc-explain {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    color: #4b5563;
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+  .lc-explain code {
+    font-family: monospace;
+    background: #f3f4f6;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+  .lc-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .ctrl-btn {
+    padding: 7px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity 0.15s;
+  }
+  .ctrl-btn:hover { opacity: 0.8; }
+</style>
+
+<div class="poc-wrap">
+  <app-nav active="/lifecycle"></app-nav>
+
+  <h1>Web Component Lifecycle</h1>
+  <p class="subtitle">observedAttributes → attributeChangedCallback patches only that element. No VDOM diff.</p>
+
+  <div class="lc-explain">
+    <code>observedAttributes</code> declares which attributes trigger <code>attributeChangedCallback</code>.<br>
+    Changing <code>color</code> or <code>label</code> patches only the affected DOM nodes inside this element.<br>
+    No framework runtime involved — this is the native Web Component API upgraded from Enhance's SSR shell.
+  </div>
+
+  <div class="lc-controls">
+    <button class="ctrl-btn" style="background:#e0e7ff;color:#3730a3" onclick="changeColor('#6366f1')">Indigo</button>
+    <button class="ctrl-btn" style="background:#d1fae5;color:#065f46" onclick="changeColor('#059669')">Green</button>
+    <button class="ctrl-btn" style="background:#fef3c7;color:#92400e" onclick="changeColor('#d97706')">Amber</button>
+    <button class="ctrl-btn" style="background:#fee2e2;color:#991b1b" onclick="changeColor('#dc2626')">Red</button>
+    <button class="ctrl-btn" style="background:#f3f4f6;color:#6b7280" onclick="changeLabel()">Change Label</button>
+    <button class="ctrl-btn" style="background:#1f2937;color:white" onclick="toggleMount()">Toggle Mount</button>
+  </div>
+
+  <div id="lifecycle-mount">
+    <my-lifecycle color="#6366f1" label="Observe me"></my-lifecycle>
+  </div>
+</div>
+
+<script>
+  function changeColor(color) {
+    const el = document.querySelector('my-lifecycle')
+    if (el) el.setAttribute('color', color)
+  }
+
+  const labels = ['Observe me', 'Attribute changed!', 'Reactive!', 'Web Components FTW!', 'No VDOM!']
+  let labelIdx = 0
+  function changeLabel() {
+    labelIdx = (labelIdx + 1) % labels.length
+    const el = document.querySelector('my-lifecycle')
+    if (el) el.setAttribute('label', labels[labelIdx])
+  }
+
+  let mounted = true
+  function toggleMount() {
+    const mount = document.getElementById('lifecycle-mount')
+    if (mounted) {
+      mount.innerHTML = '<p style="color:#9ca3af;font-size:14px;padding:24px;text-align:center;background:white;border-radius:8px">Component unmounted — disconnectedCallback fired in console</p>'
+    } else {
+      mount.innerHTML = '<my-lifecycle color="#6366f1" label="Reconnected!"></my-lifecycle>'
+    }
+    mounted = !mounted
+  }
+</script>

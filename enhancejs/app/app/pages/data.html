@@ -1,0 +1,42 @@
+<style scope="global">
+  .data-explain {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    color: #4b5563;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+  .data-explain code {
+    font-family: monospace;
+    background: #f3f4f6;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+  .flow-diagram {
+    font-family: monospace;
+    font-size: 13px;
+    color: #6366f1;
+    margin-top: 8px;
+  }
+</style>
+
+<div class="poc-wrap">
+  <app-nav active="/data"></app-nav>
+
+  <h1>SSR + API Data Flow</h1>
+  <p class="subtitle">API route populates store → element reads store → HTML rendered server-side. Zero client fetch.</p>
+
+  <div class="data-explain">
+    <code>app/api/data.mjs</code> <code>get()</code> returns <code>&#123; json: &#123; frameworks &#125; &#125;</code><br>
+    Enhance merges this into <code>state.store</code> before rendering the page.<br>
+    <code>my-framework-list</code> reads <code>state.store.frameworks</code> and renders the table server-side.<br>
+    <div class="flow-diagram">api/data.mjs → store.frameworks → my-framework-list → &lt;table&gt; HTML</div>
+  </div>
+
+  <p class="section-label">Frameworks (server-populated, zero client JS)</p>
+  <my-framework-list></my-framework-list>
+</div>
