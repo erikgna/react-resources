@@ -5,6 +5,7 @@ import DragAndDropDemo from "./DragAndDrop";
 import { IndexedDB } from "./IndexedDB";
 import IntersectionObserverPOC from "./IntersectionObserver";
 import MutationObserverPOC from "./MutationObserver";
+import StickyHideOnScroll from "./StickyHideOnScroll";
 import { Storage } from "./Storage";
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
       {/* <IntersectionObserverPOC /> */}
       {/* <MutationObserverPOC /> */}
       {/* <CanvasAPIPOC /> */}
-      <CSPPOC />
+      {/* <CSPPOC /> */}
+      <StickyHideOnScroll />
     </>
   );
 }

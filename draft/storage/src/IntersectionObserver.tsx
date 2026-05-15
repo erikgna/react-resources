@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
+// Sticky element using IntersectionObserver
+
 export type Item = {
   id: string;
   content: string;
