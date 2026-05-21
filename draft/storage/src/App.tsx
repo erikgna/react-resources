@@ -15,11 +15,11 @@ function App() {
       {/* <Cookie /> */}
       {/* <IndexedDB /> */}
       {/* <DragAndDropDemo /> */}
-      {/* <IntersectionObserverPOC /> */}
+      <IntersectionObserverPOC />
       {/* <MutationObserverPOC /> */}
       {/* <CanvasAPIPOC /> */}
       {/* <CSPPOC /> */}
-      <StickyHideOnScroll />
+      {/*<StickyHideOnScroll />*/}
     </>
   );
 }
