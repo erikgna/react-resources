@@ -9,9 +9,6 @@ const __dirname = path.dirname(__filename)
 class WindowManager {
     _windows = new Map()
 
-    // ----------------------
-    // Public API
-    // ----------------------
     createMainWindow() {
         if (this._windows.has('main')) {
             return this._windows.get('main')
@@ -53,9 +50,6 @@ class WindowManager {
         }
     }
 
-    // ----------------------
-    // Internal factory
-    // ----------------------
     _createWindow(options) {
         const win = new BrowserWindow({
             width: options.width,
@@ -79,7 +73,8 @@ class WindowManager {
             win.show()
         })
 
-        // Open external links in browser (security best practice)
+        // Intercept window.open / target="_blank" links.
+        // Deny a new BrowserWindow; open the URL in the system browser instead.
         win.webContents.setWindowOpenHandler(({ url }) => {
             shell.openExternal(url)
             return { action: 'deny' }
@@ -108,5 +103,4 @@ class WindowManager {
     }
 }
 
-// Singleton instance
 export const windowManager = new WindowManager()

@@ -1,9 +1,8 @@
 export type { IPCResponse } from '../types/ipc'
 import type { IPCResponse } from '../types/ipc'
 
-// ----------------------
-// Core helpers
-// ----------------------
+// unwrap: throws on failure — use when the caller should let errors propagate.
+// safeCall: returns [data, error] tuple — use when the caller handles errors inline.
 export async function unwrap<T>(
     promise: Promise<IPCResponse<T>>
 ): Promise<T> {
@@ -33,9 +32,8 @@ export async function safeCall<T>(
     }
 }
 
-// ----------------------
-// Domain clients
-// ----------------------
+// window.git, window.system, and window.file are injected by the preload script
+// via contextBridge.exposeInMainWorld. They are not available in a browser — only in Electron.
 export const gitClient = {
     isRepo(repoPath: string) {
         return unwrap(window.git.isRepo(repoPath))
@@ -88,9 +86,6 @@ export const gitClient = {
 
 export const systemClient = {
     openDirectory() {
-        console.log('openDirectory')
-        console.log(window)
-        console.log(window.system)
         return unwrap(window.system.openDirectory())
     },
 

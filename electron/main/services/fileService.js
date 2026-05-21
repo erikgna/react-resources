@@ -2,26 +2,14 @@ import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
 
-// ----------------------
-// Helpers
-// ----------------------
 function normalizeError(error) {
     if (error instanceof Error) return error
     return new Error(typeof error === 'string' ? error : 'Unknown file error')
 }
 
-// ----------------------
-// Watchers store
-// ----------------------
 const watchers = new Map()
 
-// ----------------------
-// Service
-// ----------------------
 export const fileService = {
-    // ----------------------
-    // Read directory
-    // ----------------------
     async readDir(dirPath) {
         try {
             const entries = await fs.readdir(dirPath, { withFileTypes: true })
@@ -52,9 +40,6 @@ export const fileService = {
         }
     },
 
-    // ----------------------
-    // Read file
-    // ----------------------
     async readFile(filePath) {
         try {
             return await fs.readFile(filePath, 'utf-8')
@@ -63,9 +48,6 @@ export const fileService = {
         }
     },
 
-    // ----------------------
-    // Write file
-    // ----------------------
     async writeFile(filePath, content) {
         try {
             await fs.writeFile(filePath, content, 'utf-8')
@@ -75,9 +57,6 @@ export const fileService = {
         }
     },
 
-    // ----------------------
-    // Exists
-    // ----------------------
     async exists(targetPath) {
         try {
             await fs.access(targetPath)
@@ -87,9 +66,6 @@ export const fileService = {
         }
     },
 
-    // ----------------------
-    // Create directory
-    // ----------------------
     async createDir(dirPath) {
         try {
             await fs.mkdir(dirPath, { recursive: true })
@@ -99,9 +75,6 @@ export const fileService = {
         }
     },
 
-    // ----------------------
-    // Delete (file or folder)
-    // ----------------------
     async remove(targetPath) {
         try {
             await fs.rm(targetPath, { recursive: true, force: true })
@@ -111,9 +84,6 @@ export const fileService = {
         }
     },
 
-    // ----------------------
-    // Rename / Move
-    // ----------------------
     async rename(oldPath, newPath) {
         try {
             await fs.rename(oldPath, newPath)
@@ -123,9 +93,6 @@ export const fileService = {
         }
     },
 
-    // ----------------------
-    // Watch directory (basic)
-    // ----------------------
     watch(dirPath, callback) {
         if (watchers.has(dirPath)) {
             return
@@ -140,7 +107,7 @@ export const fileService = {
                 const fullPath = path.join(dirPath, filename)
 
                 if (eventType === 'rename') {
-                    // could be add or delete
+                    // fs.watch uses 'rename' for both add and delete — check access to distinguish
                     fsSync.access(fullPath, (err) => {
                         if (err) {
                             callback('unlink', fullPath)
@@ -159,9 +126,6 @@ export const fileService = {
         watchers.set(dirPath, watcher)
     },
 
-    // ----------------------
-    // Stop watching
-    // ----------------------
     unwatch(dirPath) {
         const watcher = watchers.get(dirPath)
         if (watcher) {

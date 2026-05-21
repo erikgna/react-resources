@@ -1,8 +1,5 @@
 import simpleGit from 'simple-git'
 
-// ----------------------
-// Helpers
-// ----------------------
 function getGit(repoPath) {
   return simpleGit({
     baseDir: repoPath,
@@ -16,13 +13,7 @@ function normalizeError(error) {
   return new Error(typeof error === 'string' ? error : 'Unknown git error')
 }
 
-// ----------------------
-// Service
-// ----------------------
 export const gitService = {
-  // ----------------------
-  // Repo validation
-  // ----------------------
   async isRepo(repoPath) {
     try {
       const git = getGit(repoPath)
@@ -32,9 +23,6 @@ export const gitService = {
     }
   },
 
-  // ----------------------
-  // Status
-  // ----------------------
   async getStatus(repoPath) {
     try {
       const git = getGit(repoPath)
@@ -55,9 +43,6 @@ export const gitService = {
     }
   },
 
-  // ----------------------
-  // Stage / Unstage
-  // ----------------------
   async stageFiles(repoPath, files) {
     try {
       const git = getGit(repoPath)
@@ -78,9 +63,6 @@ export const gitService = {
     }
   },
 
-  // ----------------------
-  // Commit
-  // ----------------------
   async commit(repoPath, message) {
     if (!message || !message.trim()) {
       throw new Error('Commit message cannot be empty')
@@ -99,9 +81,6 @@ export const gitService = {
     }
   },
 
-  // ----------------------
-  // Log / History
-  // ----------------------
   async getLog(repoPath, limit = 50) {
     try {
       const git = getGit(repoPath)
@@ -118,9 +97,6 @@ export const gitService = {
     }
   },
 
-  // ----------------------
-  // Branches
-  // ----------------------
   async getBranches(repoPath) {
     try {
       const git = getGit(repoPath)
@@ -150,9 +126,6 @@ export const gitService = {
     }
   },
 
-  // ----------------------
-  // Sync
-  // ----------------------
   async pull(repoPath) {
     try {
       const git = getGit(repoPath)
@@ -171,9 +144,6 @@ export const gitService = {
     }
   },
 
-  // ----------------------
-  // Diff (basic)
-  // ----------------------
   async getDiff(repoPath, file) {
     try {
       const git = getGit(repoPath)

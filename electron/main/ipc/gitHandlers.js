@@ -1,9 +1,6 @@
 import { ipcMain } from 'electron'
 import { gitService } from '../services/gitService.js'
 
-// ----------------------
-// Helpers
-// ----------------------
 function handleError(error) {
     if (error instanceof Error) {
         return { success: false, error: error.message }
@@ -12,6 +9,8 @@ function handleError(error) {
     return { success: false, error: 'Unknown error' }
 }
 
+// Wraps every handler so it always returns { success, data } or { success, error }.
+// ipcMain.handle must never throw — an uncaught throw leaves the renderer promise hanging.
 async function safeExecute(fn) {
     try {
         const data = await fn()
@@ -21,27 +20,18 @@ async function safeExecute(fn) {
     }
 }
 
-// ----------------------
-// Handlers
-// ----------------------
+// ipcMain.handle registers a named async handler for ipcRenderer.invoke() calls.
+// The first argument to every handler is the IpcMainInvokeEvent (sender info);
+// it's ignored here (named _) because all needed data comes from the second arg.
 export function registerGitHandlers() {
-    // ----------------------
-    // Repo validation
-    // ----------------------
     ipcMain.handle('git:isRepo', async (_, repoPath) => {
         return safeExecute(() => gitService.isRepo(repoPath))
     })
 
-    // ----------------------
-    // Status
-    // ----------------------
     ipcMain.handle('git:status', async (_, repoPath) => {
         return safeExecute(() => gitService.getStatus(repoPath))
     })
 
-    // ----------------------
-    // Stage / Unstage
-    // ----------------------
     ipcMain.handle(
         'git:stage',
         async (_, { repoPath, files }) => {
@@ -56,49 +46,31 @@ export function registerGitHandlers() {
         }
     )
 
-    // ----------------------
-    // Commit
-    // ----------------------
     ipcMain.handle(
         'git:commit',
-        async (
-            _,
-            { repoPath, message }
-        ) => {
+        async (_, { repoPath, message }) => {
             return safeExecute(() =>
                 gitService.commit(repoPath, message)
             )
         }
     )
 
-    // ----------------------
-    // Log / History
-    // ----------------------
     ipcMain.handle(
         'git:log',
-        async (
-            _,
-            { repoPath, limit }
-        ) => {
+        async (_, { repoPath, limit }) => {
             return safeExecute(() =>
                 gitService.getLog(repoPath, limit)
             )
         }
     )
 
-    // ----------------------
-    // Branches
-    // ----------------------
     ipcMain.handle('git:branches', async (_, repoPath) => {
         return safeExecute(() => gitService.getBranches(repoPath))
     })
 
     ipcMain.handle(
         'git:checkout',
-        async (
-            _,
-            { repoPath, branch }
-        ) => {
+        async (_, { repoPath, branch }) => {
             return safeExecute(() =>
                 gitService.checkoutBranch(repoPath, branch)
             )
@@ -107,19 +79,13 @@ export function registerGitHandlers() {
 
     ipcMain.handle(
         'git:createBranch',
-        async (
-            _,
-            { repoPath, branch }
-        ) => {
+        async (_, { repoPath, branch }) => {
             return safeExecute(() =>
                 gitService.createBranch(repoPath, branch)
             )
         }
     )
 
-    // ----------------------
-    // Sync
-    // ----------------------
     ipcMain.handle('git:pull', async (_, repoPath) => {
         return safeExecute(() => gitService.pull(repoPath))
     })
@@ -128,15 +94,9 @@ export function registerGitHandlers() {
         return safeExecute(() => gitService.push(repoPath))
     })
 
-    // ----------------------
-    // Diff
-    // ----------------------
     ipcMain.handle(
         'git:diff',
-        async (
-            _,
-            { repoPath, file }
-        ) => {
+        async (_, { repoPath, file }) => {
             return safeExecute(() =>
                 gitService.getDiff(repoPath, file)
             )

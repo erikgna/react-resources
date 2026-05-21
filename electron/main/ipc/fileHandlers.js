@@ -46,6 +46,10 @@ export function registerFileHandlers() {
         return safeExecute(() => fileService.rename(oldPath, newPath))
     })
 
+    // file:watch is asymmetric: the invoke starts the watcher, but change events
+    // are pushed back to the renderer via event.sender.send — not via the return value.
+    // event.sender is the WebContents of the renderer that called invoke.
+    // isDestroyed() guards against pushing to a renderer that has since been closed.
     ipcMain.handle('file:watch', async (event, dirPath) => {
         return safeExecute(() => {
             fileService.watch(dirPath, (type, filePath) => {

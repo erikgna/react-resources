@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
+// ipcRenderer.invoke sends a named message to the main process and returns a Promise.
+// This is the request/response pattern — main registers the matching handler with ipcMain.handle.
 function invoke(channel, payload) {
     return ipcRenderer.invoke(channel, payload)
 }
@@ -32,6 +34,9 @@ const systemAPI = {
     copyToClipboard(text) { return invoke('system:copyToClipboard', text) },
 
     onRepoSelected(callback) {
+        // ipcRenderer.on subscribes to push events sent by main via webContents.send.
+        // Unlike invoke (request/response), this channel is one-way: main → renderer.
+        // Returns a cleanup function so callers can remove the listener on unmount.
         const handler = (_, path) => callback(path)
         ipcRenderer.on('repo:selected', handler)
         return () => ipcRenderer.removeListener('repo:selected', handler)
@@ -54,6 +59,10 @@ const fileAPI = {
     },
 }
 
+// contextBridge.exposeInMainWorld is the security boundary between preload and renderer.
+// It copies these objects into the renderer's window WITHOUT giving the renderer access
+// to the Node.js context where ipcRenderer lives. The renderer can call window.git.getStatus()
+// but cannot reach ipcRenderer, require(), or any other Node API directly.
 contextBridge.exposeInMainWorld('git', gitAPI)
 contextBridge.exposeInMainWorld('system', systemAPI)
 contextBridge.exposeInMainWorld('file', fileAPI)
