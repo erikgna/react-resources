@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ai-memory": {
+      "command": "npx",
+      "args": ["tsx", "/Users/erik/Documents/pocs/ai-memory/src/index.ts"],
+      "env": {
+        "PGPORT": "5436"
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+* { box-sizing: border-box; }
+
+body {
+  font-family: monospace;
+  margin: 0;
+  padding: 0;
+  background: #0f0f0f;
+  color: #d4d4d4;
+}
+
+nav {
+  background: #1a1a1a;
+  padding: 8px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid #333;
+}
+
+nav a {
+  color: #7dd3fc;
+  text-decoration: none;
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border: 1px solid #334;
+  border-radius: 3px;
+}
+
+nav a:hover { background: #1e3a5f; }
+
+main {
+  padding: 24px;
+  max-width: 900px;
+}
+
+h1 { color: #f0c040; margin-top: 0; }
+h2 { color: #a0c0ff; border-bottom: 1px solid #333; padding-bottom: 4px; }
+h3 { color: #9dd0a0; }
+
+section { margin-bottom: 32px; }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+button {
+  background: #1e3a5f;
+  color: #7dd3fc;
+  border: 1px solid #3a5f8f;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 0.9em;
+  border-radius: 3px;
+}
+
+button:hover { background: #2a4f7a; }
+button.htmx-request { opacity: 0.5; cursor: wait; }
+
+input[type="text"], input[type="number"] {
+  background: #1a1a1a;
+  color: #d4d4d4;
+  border: 1px solid #444;
+  padding: 6px 8px;
+  font-family: monospace;
+  font-size: 0.9em;
+  border-radius: 3px;
+}
+
+.result {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 6px 10px;
+  min-height: 28px;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ok { color: #6ee7b7; }
+.warn { color: #fca5a5; }
+
+.note {
+  color: #888;
+  font-size: 0.8em;
+  margin: 4px 0;
+  font-style: italic;
+}
+
+code {
+  background: #222;
+  padding: 1px 4px;
+  border-radius: 2px;
+  color: #c4b5fd;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 24px 0;
+}
+
+/* HTMX settlement: brief outline flash when new content settles */
+.htmx-settling {
+  outline: 1px solid #f0c040;
+  transition: outline 0.3s ease-out;
+}
+
+/* htmx-indicator: hidden by default, shown during request */
+.htmx-indicator {
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-indicator.htmx-request {
+  opacity: 1;
+}
+
+.spinner {
+  color: #fbbf24;
+  font-size: 0.9em;
+}
+
+.swap-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  padding: 8px;
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.swap-zone {
+  border: 1px dashed #555;
+  padding: 4px 8px;
+  min-width: 180px;
+  font-size: 0.85em;
+}
+
+.original { color: #888; }
+.swapped { color: #6ee7b7; }
