@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/erik/Documents/pocs/react-resources/ticket-system-poc/app/providers.tsx"],"sourcesContent":["'use client'\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query'\nimport { ReactQueryDevtools } from '@tanstack/react-query-devtools'\nimport { useState } from 'react'\nimport type { ReactNode } from 'react'\n\nexport function Providers({ children }: { children: ReactNode }) {\n  const [client] = useState(() => new QueryClient())\n  return (\n    <QueryClientProvider client={client}>\n      {children}\n      <ReactQueryDevtools initialIsOpen={false} />\n    </QueryClientProvider>\n  )\n}\n"],"names":[],"mappings":";;;;;AACA;AAAA;AACA;AACA;;;AAHA;;;;AAMO,SAAS,UAAU,KAAqC;QAArC,EAAE,QAAQ,EAA2B,GAArC;;IACxB,MAAM,CAAC,OAAO,GAAG,IAAA,yKAAQ;8BAAC,IAAM,IAAI,+LAAW;;IAC/C,qBACE,6LAAC,gNAAmB;QAAC,QAAQ;;YAC1B;0BACD,6LAAC,6MAAkB;gBAAC,eAAe;;;;;;;;;;;;AAGzC;GARgB;KAAA","debugId":null}}]
+}
