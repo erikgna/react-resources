@@ -1,0 +1,19 @@
+{
+  "name": "typed-html-poc",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot src/index.ts",
+    "start": "bun src/index.ts",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit",
+    "compile-errors": "bunx tsc --noEmit 2>&1 | grep 'error TS'"
+  },
+  "dependencies": {
+    "hono": "^4.7.11",
+    "typed-html": "^3.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/bun": "^1.2.15"
+  }
+}
