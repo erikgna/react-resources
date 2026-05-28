@@ -3,69 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wasm Image Processing</title>
+  <title>Wasm Array Doubling POC</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: monospace; background: #0f0f0f; color: #e0e0e0; padding: 24px; }
-    h1 { font-size: 1.2rem; margin-bottom: 16px; letter-spacing: 0.05em; }
-    .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
-    input[type="file"] { color: #aaa; }
+    body { font-family: monospace; background: #0f0f0f; color: #e0e0e0; padding: 32px; max-width: 600px; }
+    h1 { font-size: 1.1rem; margin-bottom: 8px; letter-spacing: 0.05em; }
+    .subtitle { font-size: 0.75rem; color: #666; margin-bottom: 28px; }
+    label { font-size: 0.8rem; color: #888; display: block; margin-bottom: 6px; }
+    textarea {
+      width: 100%; height: 60px; background: #1a1a2e; border: 1px solid #333;
+      color: #cdd6f4; font-family: monospace; font-size: 0.9rem; padding: 8px;
+      resize: none;
+    }
+    .buttons { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
     button {
       background: #1e1e2e; border: 1px solid #444; color: #cdd6f4;
-      padding: 6px 14px; cursor: pointer; font-family: monospace; font-size: 0.85rem;
+      padding: 7px 16px; cursor: pointer; font-family: monospace; font-size: 0.85rem;
     }
     button:hover { background: #313244; }
-    #status { font-size: 0.8rem; color: #89b4fa; margin-bottom: 16px; }
-    .canvases { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
-    .canvas-box { display: flex; flex-direction: column; gap: 6px; }
-    .canvas-label { font-size: 0.75rem; color: #888; }
-    canvas { border: 1px solid #333; max-width: 480px; display: block; }
-    table { border-collapse: collapse; font-size: 0.8rem; width: 100%; max-width: 520px; }
-    th, td { border: 1px solid #333; padding: 6px 12px; text-align: left; }
-    th { background: #1e1e2e; color: #cba6f7; }
-    td:nth-child(2), td:nth-child(3) { color: #a6e3a1; }
-    td:nth-child(4) { color: #f9e2af; }
+    .section { margin-top: 20px; }
+    .section-label { font-size: 0.75rem; color: #888; margin-bottom: 6px; }
+    #output {
+      background: #1a1a2e; border: 1px solid #333; padding: 10px;
+      font-size: 0.9rem; color: #a6e3a1; min-height: 36px; word-break: break-all;
+    }
+    #status { font-size: 0.78rem; color: #89b4fa; margin-top: 10px; }
+    #bench-result {
+      font-size: 0.82rem; color: #f9e2af; background: #1a1a2e;
+      border: 1px solid #333; padding: 10px; margin-top: 8px; min-height: 32px;
+    }
+    .divider { border: none; border-top: 1px solid #222; margin: 28px 0; }
   </style>
 </head>
 <body>
-  <h1>WebAssembly Image Processing POC</h1>
+  <h1>WebAssembly Array Doubling POC</h1>
+  <p class="subtitle">Learn the JS↔Wasm memory protocol: alloc → copy in → Rust mutates → copy out → free</p>
 
-  <div class="controls">
-    <input type="file" id="file-input" accept="image/*" />
-    <button id="btn-grayscale">Grayscale</button>
-    <button id="btn-blur">Blur</button>
-    <button id="btn-edge">Edge Detect</button>
-    <button id="btn-blur-chain">Blur ×10</button>
-    <button id="btn-gaussian">Gaussian 11×11</button>
-    <button id="btn-bilateral">Bilateral r=10 ⚡heavy</button>
-    <button id="btn-mandelbrot">Mandelbrot ⚡heavy</button>
-    <button id="btn-resize">Resize ½</button>
+  <label>Input (comma-separated integers)</label>
+  <textarea id="input">10, 25, 50, 100, 200, -5, 0, 999</textarea>
+
+  <div class="buttons">
+    <button id="btn-wasm">Double via Wasm</button>
+    <button id="btn-js">Double via JS</button>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Result</div>
+    <div id="output">—</div>
   </div>
 
   <div id="status">Initializing...</div>
 
-  <div class="canvases">
-    <div class="canvas-box">
-      <span class="canvas-label">Original</span>
-      <canvas id="original"></canvas>
-    </div>
-    <div class="canvas-box">
-      <span class="canvas-label">Processed</span>
-      <canvas id="processed"></canvas>
-    </div>
-  </div>
+  <hr class="divider" />
 
-  <table>
-    <thead>
-      <tr>
-        <th>Filter</th>
-        <th>Wasm (ms)</th>
-        <th>JS (ms)</th>
-        <th>Speedup</th>
-      </tr>
-    </thead>
-    <tbody id="benchmark-body"></tbody>
-  </table>
+  <div class="section-label">Benchmark — 1,000,000 elements</div>
+  <button id="btn-bench">Run Benchmark</button>
+  <div id="bench-result">—</div>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

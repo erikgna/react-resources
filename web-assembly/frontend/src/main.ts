@@ -1,89 +1,62 @@
-import { WasmImageProcessor } from "./wasmClient.js";
-import { loadImageData, renderToCanvas } from "./canvas.js";
-import { runBenchmark, FilterName } from "./benchmark.js";
+import { WasmNumberProcessor } from "./wasmClient.js";
 
-const wasm = new WasmImageProcessor();
-let currentImage: ImageData | null = null;
+const wasm = new WasmNumberProcessor();
 
-const originalCanvas = document.getElementById("original") as HTMLCanvasElement;
-const processedCanvas = document.getElementById("processed") as HTMLCanvasElement;
+const inputEl = document.getElementById("input") as HTMLTextAreaElement;
+const outputEl = document.getElementById("output")!;
 const statusEl = document.getElementById("status")!;
-const benchmarkBody = document.getElementById("benchmark-body")!;
+const benchResultEl = document.getElementById("bench-result")!;
 
 async function init() {
   statusEl.textContent = "Loading Wasm...";
   await wasm.init();
-  statusEl.textContent = "Ready. Upload an image.";
+  statusEl.textContent = "Ready.";
 }
 
-document.getElementById("file-input")!.addEventListener("change", async (e) => {
-  const file = (e.target as HTMLInputElement).files?.[0];
-  if (!file) return;
-  currentImage = await loadImageData(file);
-  renderToCanvas(originalCanvas, currentImage.data, currentImage.width, currentImage.height);
-  statusEl.textContent = `Loaded ${currentImage.width}×${currentImage.height}`;
-  processedCanvas.width = currentImage.width;
-  processedCanvas.height = currentImage.height;
-  const ctx = processedCanvas.getContext("2d")!;
-  ctx.clearRect(0, 0, processedCanvas.width, processedCanvas.height);
+function parseInput(): Int32Array | null {
+  const parts = inputEl.value.split(",").map(s => parseInt(s.trim(), 10));
+  if (parts.some(isNaN)) {
+    outputEl.textContent = "Error: enter comma-separated integers";
+    return null;
+  }
+  return new Int32Array(parts);
+}
+
+document.getElementById("btn-wasm")!.addEventListener("click", () => {
+  const data = parseInput();
+  if (!data) return;
+
+  const result = wasm.doubleArray(data);
+  outputEl.textContent = Array.from(result).join(", ");
+  statusEl.textContent = `Wasm doubled ${data.length} value(s).`;
 });
 
-async function applyFilter(name: FilterName) {
-  if (name !== "mandelbrot" && !currentImage) return;
-  statusEl.textContent = "Processing...";
+document.getElementById("btn-js")!.addEventListener("click", () => {
+  const data = parseInput();
+  if (!data) return;
 
-  if (name === "mandelbrot") {
-    const W = 800, H = 600, ITER = 500;
-    const result = wasm.mandelbrot(W, H, ITER);
-    renderToCanvas(processedCanvas, result, W, H);
-    const bench = await runBenchmark("mandelbrot", new ImageData(1, 1), wasm);
-    addBenchmarkRow("mandelbrot (800×600, iter=500)", bench.wasmMs, bench.jsMs);
-    statusEl.textContent = `Done — Wasm ${bench.wasmMs}ms vs JS ${bench.jsMs}ms`;
-    return;
-  }
+  const result = new Int32Array(data.length);
+  for (let i = 0; i < data.length; i++) result[i] = data[i] * 2;
+  outputEl.textContent = Array.from(result).join(", ");
+  statusEl.textContent = `JS doubled ${data.length} value(s).`;
+});
 
-  const { data, width, height } = currentImage!;
-  let result: Uint8ClampedArray;
+document.getElementById("btn-bench")!.addEventListener("click", () => {
+  const COUNT = 1_000_000;
+  const data = new Int32Array(COUNT).fill(42);
 
-  if (name === "grayscale") result = wasm.grayscale(data);
-  else if (name === "blur") result = wasm.blur(data, width, height);
-  else if (name === "blur-chain") result = wasm.blurChain(data, width, height, 10);
-  else if (name === "gaussian") result = wasm.gaussianBlur(data, width, height);
-  else if (name === "bilateral") result = wasm.bilateralFilter(data, width, height);
-  else result = wasm.edgeDetect(data, width, height);
+  const t0 = performance.now();
+  wasm.doubleArray(data);
+  const wasmMs = (performance.now() - t0).toFixed(2);
 
-  renderToCanvas(processedCanvas, result, width, height);
+  const t1 = performance.now();
+  const jsOut = new Int32Array(COUNT);
+  for (let i = 0; i < COUNT; i++) jsOut[i] = data[i] * 2;
+  const jsMs = (performance.now() - t1).toFixed(2);
 
-  const bench = await runBenchmark(name, currentImage!, wasm);
-  const label = name === "bilateral" ? `bilateral (r=10, 441 exp/px)` : name;
-  addBenchmarkRow(label, bench.wasmMs, bench.jsMs);
-
-  statusEl.textContent = `Done — Wasm ${bench.wasmMs}ms vs JS ${bench.jsMs}ms`;
-}
-
-function addBenchmarkRow(filter: string, wasmMs: number, jsMs: number) {
-  const speedup = jsMs > 0 ? (jsMs / wasmMs).toFixed(2) : "—";
-  const tr = document.createElement("tr");
-  tr.innerHTML = `<td>${filter}</td><td>${wasmMs}</td><td>${jsMs}</td><td>${speedup}×</td>`;
-  benchmarkBody.prepend(tr);
-}
-
-async function applyResize() {
-  if (!currentImage) return;
-  const dstW = Math.round(currentImage.width / 2);
-  const dstH = Math.round(currentImage.height / 2);
-  const res = wasm.resize(currentImage.data, currentImage.width, currentImage.height, dstW, dstH);
-  renderToCanvas(processedCanvas, res.data, res.width, res.height);
-  statusEl.textContent = `Resized to ${dstW}×${dstH}`;
-}
-
-document.getElementById("btn-grayscale")!.addEventListener("click", () => applyFilter("grayscale"));
-document.getElementById("btn-blur")!.addEventListener("click", () => applyFilter("blur"));
-document.getElementById("btn-edge")!.addEventListener("click", () => applyFilter("edge"));
-document.getElementById("btn-blur-chain")!.addEventListener("click", () => applyFilter("blur-chain"));
-document.getElementById("btn-gaussian")!.addEventListener("click", () => applyFilter("gaussian"));
-document.getElementById("btn-bilateral")!.addEventListener("click", () => applyFilter("bilateral"));
-document.getElementById("btn-mandelbrot")!.addEventListener("click", () => applyFilter("mandelbrot"));
-document.getElementById("btn-resize")!.addEventListener("click", applyResize);
+  const speedup = (parseFloat(jsMs) / parseFloat(wasmMs)).toFixed(2);
+  benchResultEl.textContent =
+    `Wasm: ${wasmMs}ms   JS: ${jsMs}ms   Speedup: ${speedup}×  (n = ${COUNT.toLocaleString()})`;
+});
 
 init();
