@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, Profiler, type ProfilerOnRenderCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { For } from 'million/react';
 
 interface Item {
@@ -11,6 +11,9 @@ function generate(count: number): Item[] {
   return Array.from({ length: count }, (_, i) => ({ id: i, value: `Item ${i}`, highlighted: false }));
 }
 
+// Plain component — NOT wrapped in block(). <For> auto-blocks each child internally;
+// wrapping it again yourself double-blocks and breaks Million. Manual block() is only for
+// standalone islands (see MillionTicker), never for <For> children.
 function ListItem({ item }: { item: Item }) {
   return (
     <li style={{ background: item.highlighted ? '#dfd' : 'transparent', padding: '2px 8px', listStyle: 'none', fontSize: 13 }}>
@@ -19,28 +22,13 @@ function ListItem({ item }: { item: Item }) {
   );
 }
 
-const SIZES = [500, 1_000];
-
 export default function MillionList() {
-  const [size, setSize] = useState(1_000);
   const [items, setItems] = useState(() => generate(1_000));
-  const [renderCount, setRenderCount] = useState(0);
-  const [renderMs, setRenderMs] = useState(0);
+  const [updates, setUpdates] = useState(0);
   const running = useRef(false);
-  const latestMs = useRef(0);
-  const rafRef = useRef(0);
 
-  const onRender: ProfilerOnRenderCallback = (_id, _phase, actual) => {
-    latestMs.current = actual;
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => setRenderMs(latestMs.current));
-  };
-
-  const applySize = useCallback((n: number) => {
-    setSize(n);
-    setItems(generate(n));
-  }, []);
-
+  // Stress: for 3s, toggle exactly ONE row per frame. This is where <For> wins — React
+  // would re-walk all 1,000 rows to find the change; Million patches only the changed <li>.
   const stress = useCallback(() => {
     if (running.current) return;
     running.current = true;
@@ -54,7 +42,7 @@ export default function MillionList() {
         next[idx] = { ...next[idx], highlighted: !next[idx].highlighted };
         return next;
       });
-      setRenderCount(c => c + 1);
+      setUpdates(c => c + 1);
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -62,31 +50,20 @@ export default function MillionList() {
 
   return (
     <div>
-      <h3 style={{ margin: '0 0 12px', color: '#4a4' }}>Million.js (For + block)</h3>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 13 }}>Size:</span>
-        {SIZES.map(s => (
-          <button key={s} onClick={() => applySize(s)}
-            style={{ fontWeight: size === s ? 'bold' : 'normal', padding: '4px 10px', cursor: 'pointer' }}>
-            {s.toLocaleString()}
-          </button>
-        ))}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
         <button onClick={stress}
-          style={{ marginLeft: 8, background: '#4a4', color: '#fff', border: 'none', padding: '4px 14px', borderRadius: 4, cursor: 'pointer' }}>
-          Stress 3s
+          style={{ background: '#4a4', color: '#fff', border: 'none', padding: '4px 14px', borderRadius: 4, cursor: 'pointer' }}>
+          Stress 3s (1,000 rows)
         </button>
-        <span style={{ fontSize: 12, color: '#666' }}>
-          Updates: {renderCount} | Render: {renderMs.toFixed(2)}ms
-        </span>
+        <span style={{ fontSize: 12, color: '#666' }}>Updates: {updates}</span>
       </div>
-      <div style={{ overflow: 'auto', maxHeight: 500, border: '1px solid #eee', borderRadius: 4 }}>
-        <Profiler id="million-list" onRender={onRender}>
-          <ul style={{ margin: 0, padding: 0 }}>
-            <For each={items}>
-              {(item) => <ListItem key={item.id} item={item} />}
-            </For>
-          </ul>
-        </Profiler>
+      <div style={{ overflow: 'auto', maxHeight: 400, border: '1px solid #eee', borderRadius: 4 }}>
+        <ul style={{ margin: 0, padding: 0 }}>
+          {/* <For> replaces {items.map()} and moves list diffing out of React's VDOM. */}
+          <For each={items}>
+            {(item) => <ListItem key={item.id} item={item} />}
+          </For>
+        </ul>
       </div>
     </div>
   );
